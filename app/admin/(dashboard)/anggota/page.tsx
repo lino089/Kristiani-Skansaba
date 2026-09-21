@@ -163,10 +163,10 @@ export default function AdminAnggotaPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <Users className="w-6 h-6 text-blue-600" />
-            <span>Manajemen Anggota &amp; Alumni</span>
+            <span>Direktori Siswa &amp; Alumni (Buku Kenangan)</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Kelola data siswa aktif, jabatan organisasi, dan arsip alumni per angkatan.
+            Arsip data siswa aktif, foto kenangan, dan catatan alumni per angkatan.
           </p>
         </div>
 
@@ -176,7 +176,7 @@ export default function AdminAnggotaPage() {
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-xs shadow-blue-600/30 transition-all cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>Tambah Anggota</span>
+          <span>Tambah Siswa / Alumni</span>
         </button>
       </div>
 
@@ -190,7 +190,7 @@ export default function AdminAnggotaPage() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Cari nama atau jabatan..."
+            placeholder="Cari nama atau pelayanan..."
             className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-hidden"
           />
         </div>
@@ -315,7 +315,7 @@ export default function AdminAnggotaPage() {
           <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="font-bold text-lg text-slate-900">
-                {editingItem ? 'Edit Data Anggota' : 'Tambah Anggota Baru'}
+                {editingItem ? 'Edit Data Siswa / Alumni' : 'Tambah Siswa / Alumni Baru'}
               </h3>
               <button
                 type="button"
@@ -344,14 +344,14 @@ export default function AdminAnggotaPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Jabatan / Peran
+                    Keterangan / Minat Pelayanan
                   </label>
                   <input
                     type="text"
                     required
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
-                    placeholder="Ketua / Anggota"
+                    placeholder="Contoh: Siswa / Musik &amp; Pujian / Liturgi"
                     className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-hidden"
                   />
                 </div>
@@ -385,7 +385,7 @@ export default function AdminAnggotaPage() {
 
               {/* Upload Foto Anggota HD */}
               <ImageUploader
-                label="Foto Profil HD"
+                label="Foto Profil / Kenangan HD"
                 value={photoUrl}
                 onChange={(url) => setPhotoUrl(url)}
                 aspectRatio="1/1"
@@ -433,7 +433,7 @@ export default function AdminAnggotaPage() {
                   disabled={isSaving}
                   className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 disabled:opacity-50 shadow-xs cursor-pointer"
                 >
-                  {isSaving ? 'Menyimpan...' : 'Simpan Data Anggota'}
+                  {isSaving ? 'Menyimpan...' : 'Simpan Data Siswa'}
                 </button>
               </div>
             </form>
@@ -444,8 +444,8 @@ export default function AdminAnggotaPage() {
       {/* Dialog Konfirmasi Hapus Data (PRD Acceptance Criteria) */}
       <ConfirmDialog
         isOpen={Boolean(deleteTarget)}
-        title="Hapus Data Anggota?"
-        message={`Apakah Anda yakin ingin menghapus data anggota "${deleteTarget?.name}"?`}
+        title="Hapus Data Siswa / Alumni?"
+        message={`Apakah Anda yakin ingin menghapus data "${deleteTarget?.name}" dari direktori?`}
         isLoading={isDeleting}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}

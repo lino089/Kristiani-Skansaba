@@ -1,6 +1,5 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import { Image as ImageIcon } from 'lucide-react';
 import { getGallery } from '@/lib/data-store';
 import GalleryClient from '@/components/public/GalleryClient';
 
@@ -17,15 +16,14 @@ export default async function GaleriPage() {
     <div className="py-12 lg:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider mb-3">
-          <ImageIcon className="w-3.5 h-3.5" />
-          <span>Arsip Dokumentasi Visual</span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Galeri Foto Komunitas
+        <p className="text-xs font-bold uppercase tracking-wider text-[#15803D] mb-2">
+          Arsip Dokumentasi Visual
+        </p>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0F172A] tracking-tight">
+          Galeri Dokumentasi &amp; Kenangan
         </h1>
-        <p className="text-base text-slate-600 mt-3 leading-relaxed">
-          Kumpulan momen berharga dan kenangan sukacita dalam persekutuan doa, perayaan keagamaan, serta aksi kasih bersama.
+        <p className="text-base text-[#475569] mt-3 leading-relaxed">
+          Kumpulan momen berharga dan kenangan sukacita dalam persekutuan doa, perayaan keagamaan, serta kebersamaan siswa Kristiani.
         </p>
       </div>
 

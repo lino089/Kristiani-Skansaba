@@ -167,10 +167,10 @@ export default function AdminKegiatanPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <Calendar className="w-6 h-6 text-blue-600" />
-            <span>Manajemen Kegiatan &amp; Acara</span>
+            <span>Jadwal &amp; Dokumentasi Kegiatan</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Atur agenda kegiatan mendatang, dokumentasi kegiatan selesai, serta foto pelaksanaannya.
+            Atur jadwal ibadah bersama, perayaan hari besar (Natal/Paskah), retret, dan arsip dokumentasinya.
           </p>
         </div>
 
@@ -180,7 +180,7 @@ export default function AdminKegiatanPage() {
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-xs shadow-blue-600/30 transition-all cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>Tambah Kegiatan</span>
+          <span>Tambah Agenda / Dokumentasi</span>
         </button>
       </div>
 

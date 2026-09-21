@@ -20,7 +20,7 @@ export const DEFAULT_AVATAR_PLACEHOLDER =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='%23e2e8f0'%3E%3Crect width='200' height='200' fill='%23f1f5f9'/%3E%3Ccircle cx='100' cy='75' r='40' fill='%2394a3b8'/%3E%3Cpath d='M30 180 c0 -40 30 -60 70 -60 c40 0 70 20 70 60 Z' fill='%2394a3b8'/%3E%3C/svg%3E";
 
 export const DEFAULT_EVENT_PLACEHOLDER =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400' fill='%23f8fafc'%3E%3Crect width='600' height='400' fill='%23e2e8f0'/%3E%3Cpath d='M250 170 L350 170 L300 240 Z' fill='%2394a3b8'/%3E%3Ctext x='50%25' y='80%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='20' fill='%2364748b'%3EDokumentasi Komunitas%3C/text%3E%3C/svg%3E";
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400' fill='%23f8fafc'%3E%3Crect width='600' height='400' fill='%23e2e8f0'/%3E%3Cpath d='M250 170 L350 170 L300 240 Z' fill='%2394a3b8'/%3E%3Ctext x='50%25' y='80%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='20' fill='%2364748b'%3EDokumentasi Kegiatan%3C/text%3E%3C/svg%3E";
 
 /**
  * Extracts Google Drive ID if present in the URL

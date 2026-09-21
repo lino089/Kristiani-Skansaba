@@ -1,13 +1,12 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import { Calendar } from 'lucide-react';
 import { getEvents } from '@/lib/data-store';
 import EventsClient from '@/components/public/EventsClient';
 
 export const metadata: Metadata = {
-  title: 'Agenda & Dokumentasi Kegiatan',
+  title: 'Jadwal & Dokumentasi Kegiatan',
   description:
-    'Jadwal ibadah, retret, perayaan hari besar, dan dokumentasi kegiatan Komunitas Siswa Kristiani SMK Negeri 1 Bantul.',
+    'Jadwal peribadatan bersama, perayaan hari besar gerejawi (Natal & Paskah), retret, dan arsip dokumentasi siswa Kristiani SMK Negeri 1 Bantul.',
 };
 
 export default async function KegiatanPage() {
@@ -17,15 +16,14 @@ export default async function KegiatanPage() {
     <div className="py-12 lg:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider mb-3">
-          <Calendar className="w-3.5 h-3.5" />
-          <span>Agenda &amp; Rekam Jejak</span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Kegiatan &amp; Dokumentasi Acara
+        <p className="text-xs font-bold uppercase tracking-wider text-[#15803D] mb-2">
+          Agenda &amp; Rekam Jejak
+        </p>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0F172A] tracking-tight">
+          Jadwal &amp; Dokumentasi Kegiatan
         </h1>
-        <p className="text-base text-slate-600 mt-3 leading-relaxed">
-          Temukan jadwal kegiatan kerohanian yang akan datang serta arsip dokumentasi momen kebersamaan yang telah berlangsung.
+        <p className="text-base text-[#475569] mt-3 leading-relaxed">
+          Jadwal ibadah bersama, perayaan hari besar keagamaan (Natal dan Paskah), retret pembinaan, serta arsip dokumentasi momen kebersamaan siswa Kristiani.
         </p>
       </div>
 

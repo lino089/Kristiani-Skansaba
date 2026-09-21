@@ -23,6 +23,16 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedPhoto) {
+        setSelectedPhoto(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedPhoto]);
+
   const handleShareWhatsApp = () => {
     const text = encodeURIComponent(
       `*${event.title}*\nTanggal: ${new Date(event.event_date).toLocaleDateString('id-ID', {
@@ -46,7 +56,7 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
       <div>
         <Link
           href="/kegiatan"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-[#475569] hover:text-[#026AA2] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Kembali ke Daftar Kegiatan</span>
@@ -57,15 +67,15 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
       <header className="space-y-6">
         <div className="flex flex-wrap items-center gap-3">
           <span
-            className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${
+            className={`text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider ${
               event.status === 'upcoming'
-                ? 'bg-emerald-500 text-white shadow-xs'
-                : 'bg-slate-800 text-white'
+                ? 'bg-[#DCFCE7] text-[#15803D] border border-[#BBF7D0] shadow-xs'
+                : 'bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]'
             }`}
           >
             {event.status === 'upcoming' ? 'Kegiatan Mendatang' : 'Kegiatan Selesai'}
           </span>
-          <span className="text-xs text-slate-500 font-medium">
+          <span className="text-xs text-[#64748B] font-medium">
             Dipublikasikan pada {new Date(event.created_at).toLocaleDateString('id-ID', {
               day: 'numeric',
               month: 'long',
@@ -74,19 +84,19 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
           </span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] tracking-tight leading-tight">
           {event.title}
         </h1>
 
         {/* Bar Informasi Waktu & Lokasi */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white p-5 rounded-3xl border border-[#E2E8F0] shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-[#E0F2FE] text-[#0284C7] flex items-center justify-center flex-shrink-0">
               <Calendar className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-xs text-slate-400 font-medium">Tanggal Pelaksanaan</p>
-              <p className="text-sm font-bold text-slate-800">
+              <p className="text-xs text-[#64748B] font-medium">Tanggal Pelaksanaan</p>
+              <p className="text-sm font-bold text-[#0F172A]">
                 {new Date(event.event_date).toLocaleDateString('id-ID', {
                   weekday: 'long',
                   day: 'numeric',
@@ -98,24 +108,24 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-[#FEF3C7] text-[#B45309] flex items-center justify-center flex-shrink-0">
               <Clock className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-xs text-slate-400 font-medium">Waktu Acara</p>
-              <p className="text-sm font-bold text-slate-800">
+              <p className="text-xs text-[#64748B] font-medium">Waktu Acara</p>
+              <p className="text-sm font-bold text-[#0F172A]">
                 {event.time || 'Waktu Menyesuaikan'}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-[#DCFCE7] text-[#15803D] flex items-center justify-center flex-shrink-0">
               <MapPin className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-xs text-slate-400 font-medium">Lokasi Kegiatan</p>
-              <p className="text-sm font-bold text-slate-800 line-clamp-1">
+              <p className="text-xs text-[#64748B] font-medium">Lokasi Kegiatan</p>
+              <p className="text-sm font-bold text-[#0F172A] line-clamp-1">
                 {event.location}
               </p>
             </div>
@@ -124,7 +134,7 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
       </header>
 
       {/* Cover Image Utama */}
-      <div className="rounded-3xl overflow-hidden border border-slate-200 shadow-lg bg-slate-100">
+      <div className="rounded-3xl overflow-hidden border border-[#E2E8F0] shadow-md bg-[#F1F5F9]">
         <OptimizedImage
           src={event.cover_image_url}
           alt={event.title}
@@ -136,11 +146,11 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
 
       {/* Deskripsi Lengkap & Share Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        <div className="lg:col-span-8 bg-white rounded-3xl p-8 sm:p-10 border border-slate-200 shadow-xs space-y-6">
-          <h2 className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-3">
+        <div className="lg:col-span-8 bg-white rounded-3xl p-8 sm:p-10 border border-[#E2E8F0] shadow-xs space-y-6">
+          <h2 className="text-xl font-bold text-[#0F172A] border-b border-[#F1F5F9] pb-3">
             Deskripsi &amp; Susunan Kegiatan
           </h2>
-          <div className="prose prose-slate max-w-none text-slate-700 leading-relaxed text-base whitespace-pre-line">
+          <div className="prose prose-slate max-w-none text-[#475569] leading-relaxed text-base whitespace-pre-line">
             {event.description}
           </div>
         </div>
@@ -148,12 +158,12 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
         {/* Sidebar Aksi & Informasi */}
         <div className="lg:col-span-4 space-y-6">
           {/* Share Box (WhatsApp / Copy Link) */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-4">
-            <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-              <Share2 className="w-4 h-4 text-blue-600" />
+          <div className="bg-white rounded-3xl p-6 border border-[#E2E8F0] shadow-xs space-y-4">
+            <h3 className="font-bold text-sm text-[#0F172A] flex items-center gap-2">
+              <Share2 className="w-4 h-4 text-[#026AA2]" />
               <span>Bagikan Informasi Acara</span>
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#64748B]">
               Sebarkan kabar baik dan ajak rekan-rekan untuk turut hadir dalam kegiatan ini.
             </p>
 
@@ -161,7 +171,7 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
               <button
                 type="button"
                 onClick={handleShareWhatsApp}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 transition-colors shadow-xs"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold text-white bg-[#15803D] hover:bg-[#166534] transition-colors shadow-xs focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2 focus-visible:outline-hidden cursor-pointer"
               >
                 <span>Bagikan ke WhatsApp</span>
               </button>
@@ -169,16 +179,16 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
               <button
                 type="button"
                 onClick={handleCopyLink}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors border border-slate-200"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold text-[#334155] bg-white hover:bg-[#F1F5F9] transition-colors border border-[#E2E8F0] shadow-xs focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:ring-offset-2 focus-visible:outline-hidden cursor-pointer"
               >
                 {copied ? (
                   <>
-                    <Check className="w-4 h-4 text-emerald-600" />
+                    <Check className="w-4 h-4 text-[#15803D]" />
                     <span>Tautan Tersalin!</span>
                   </>
                 ) : (
                   <>
-                    <Share2 className="w-4 h-4" />
+                    <Share2 className="w-4 h-4 text-[#64748B]" />
                     <span>Salin Tautan Halaman</span>
                   </>
                 )}
@@ -190,16 +200,16 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
 
       {/* Galeri Dokumentasi Terkait Acara (PRD Modul 5) */}
       {event.gallery_urls && event.gallery_urls.length > 0 && (
-        <section className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200 shadow-xs space-y-6">
-          <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+        <section className="bg-white rounded-3xl p-8 sm:p-10 border border-[#E2E8F0] shadow-xs space-y-6">
+          <div className="flex items-center gap-2 pb-3 border-b border-[#F1F5F9]">
+            <div className="w-8 h-8 rounded-xl bg-[#E0F2FE] text-[#0284C7] flex items-center justify-center">
               <ImageIcon className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900">
+              <h2 className="text-xl font-bold text-[#0F172A]">
                 Galeri Dokumentasi Kegiatan
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[#64748B]">
                 Foto-foto momen yang terekam selama acara berlangsung.
               </p>
             </div>
@@ -210,7 +220,7 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
               <div
                 key={idx}
                 onClick={() => setSelectedPhoto(photoUrl)}
-                className="relative cursor-pointer rounded-xl overflow-hidden border border-slate-200 group aspect-square bg-slate-100"
+                className="relative cursor-pointer rounded-2xl overflow-hidden border border-[#E2E8F0] group aspect-square bg-[#F1F5F9]"
               >
                 <OptimizedImage
                   src={photoUrl}
@@ -218,7 +228,7 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
                   aspectRatio="1/1"
                   className="group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-medium">
+                <div className="absolute inset-0 bg-[#0F172A]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-medium">
                   <span>Perbesar Foto</span>
                 </div>
               </div>
@@ -239,7 +249,8 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
           >
             <button
               onClick={() => setSelectedPhoto(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-slate-900/80 text-white hover:bg-slate-800 transition-colors"
+              aria-label="Tutup Pratinjau (Escape)"
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-slate-900/80 text-white hover:bg-slate-800 transition-colors focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-hidden cursor-pointer"
             >
               <X className="w-6 h-6" />
             </button>

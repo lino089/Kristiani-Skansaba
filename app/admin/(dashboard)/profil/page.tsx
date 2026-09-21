@@ -121,7 +121,7 @@ export default function AdminProfilPage() {
     return (
       <div className="py-20 text-center">
         <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto" />
-        <p className="text-xs text-slate-500 mt-2">Memuat data profil organisasi...</p>
+        <p className="text-xs text-slate-500 mt-2">Memuat data profil &amp; pembina...</p>
       </div>
     );
   }
@@ -133,10 +133,10 @@ export default function AdminProfilPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <Building2 className="w-6 h-6 text-blue-600" />
-            <span>Profil &amp; Struktur Organisasi</span>
+            <span>Profil &amp; Narahubung Kegiatan</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Ubah sejarah, visi, misi, dan susunan pengurus tanpa perlu deploy ulang.
+            Ubah sejarah perjalanan, nilai bersama, dan narahubung/pembina tanpa perlu deploy ulang.
           </p>
         </div>
 
@@ -175,7 +175,7 @@ export default function AdminProfilPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-              Nama Komunitas
+              Nama Persekutuan / Wadah
             </label>
             <input
               type="text"
@@ -203,10 +203,10 @@ export default function AdminProfilPage() {
       {/* Narasi Sejarah */}
       <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-4">
         <h2 className="font-bold text-base text-slate-900 border-b border-slate-100 pb-3">
-          2. Narasi Sejarah Komunitas
+          2. Narasi Sejarah &amp; Kebersamaan
         </h2>
         <p className="text-xs text-slate-500">
-          Tuliskan rekam jejak berdirinya persekutuan rohani siswa Kristiani di sekolah.
+          Tuliskan rekam jejak perjalanan dan kebersamaan persekutuan siswa Kristiani di sekolah.
         </p>
         <textarea
           required
@@ -220,12 +220,12 @@ export default function AdminProfilPage() {
       {/* Visi dan Misi */}
       <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-6">
         <h2 className="font-bold text-base text-slate-900 border-b border-slate-100 pb-3">
-          3. Visi &amp; Misi Komunitas
+          3. Nilai &amp; Semangat Bersama
         </h2>
 
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-            Rumusan Visi Organisasi
+            Pesan Nilai &amp; Semangat Bersama
           </label>
           <textarea
             required
@@ -239,7 +239,7 @@ export default function AdminProfilPage() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Poin-poin Misi Organisasi
+              Wujud Nyata Semangat &amp; Pelayanan
             </label>
             <button
               type="button"
@@ -247,7 +247,7 @@ export default function AdminProfilPage() {
               className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Tambah Butir Misi</span>
+              <span>Tambah Butir Pelayanan</span>
             </button>
           </div>
 
@@ -261,7 +261,7 @@ export default function AdminProfilPage() {
                   type="text"
                   value={item}
                   onChange={(e) => handleUpdateMission(idx, e.target.value)}
-                  placeholder="Tuliskan butir misi..."
+                  placeholder="Tuliskan butir sikap/pelayanan..."
                   className="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-hidden"
                 />
                 <button
@@ -283,10 +283,10 @@ export default function AdminProfilPage() {
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div>
             <h2 className="font-bold text-base text-slate-900">
-              4. Bagan Susunan Kepengurusan &amp; Pembina
+              4. Guru Pembina &amp; Koordinator Kegiatan Siswa
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Daftar pejabat organisasi yang ditampilkan pada bagan visual halaman profil.
+              Daftar Guru Pembina Agama dan siswa narahubung/PIC pelayanan kegiatan.
             </p>
           </div>
           <button
@@ -295,7 +295,7 @@ export default function AdminProfilPage() {
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
           >
             <UserPlus className="w-3.5 h-3.5" />
-            <span>Tambah Posisi</span>
+            <span>Tambah Pembina/Koordinator</span>
           </button>
         </div>
 

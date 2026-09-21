@@ -44,7 +44,7 @@ export async function generateMetadata({
       title: `${event.title} | Kristiani Skansaba`,
       description: event.summary || event.description.slice(0, 160),
       url: pageUrl,
-      siteName: 'Komunitas Siswa Kristiani Skansaba',
+      siteName: 'Persekutuan Siswa Kristiani Skansaba',
       type: 'article',
       images: [
         {

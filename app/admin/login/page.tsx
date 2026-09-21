@@ -44,9 +44,9 @@ function LoginForm() {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 sm:p-10 shadow-2xl space-y-6">
+    <div className="bg-white border border-[#E2E8F0] rounded-3xl p-8 sm:p-10 shadow-lg space-y-6">
       <div className="text-center space-y-3">
-        <div className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center bg-white/10 p-1.5 border border-white/10 mx-auto shadow-lg shadow-blue-500/20">
+        <div className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center bg-white p-1.5 border border-[#E2E8F0] mx-auto shadow-xs">
           <Image
             src="/LogoKristianiSkansaba.png"
             alt="Logo Kristiani Skansaba"
@@ -57,29 +57,29 @@ function LoginForm() {
           />
         </div>
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">
+          <h1 className="text-2xl font-extrabold text-[#0F172A] tracking-tight">
             Panel Masuk CMS
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Komunitas Siswa Kristiani SMK Negeri 1 Bantul
+          <p className="text-xs text-[#64748B] mt-1">
+            Persekutuan Siswa Kristiani SMK Negeri 1 Bantul
           </p>
         </div>
       </div>
 
       {errorMsg && (
-        <div className="p-3.5 rounded-xl bg-red-950/60 border border-red-800/80 text-xs text-red-200 flex items-start gap-2.5">
-          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start gap-2.5">
+          <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-            Email Pengurus
+          <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider mb-1.5">
+            Email Pembina / Pengelola
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#64748B]">
               <Mail className="w-4 h-4" />
             </div>
             <input
@@ -88,17 +88,17 @@ function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@skansaba.sch.id"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#0F172A] placeholder-[#94A3B8] text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0284C7] focus:border-transparent transition-all"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider mb-1.5">
             Kata Sandi
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#64748B]">
               <Lock className="w-4 h-4" />
             </div>
             <input
@@ -107,7 +107,7 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••••"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#0F172A] placeholder-[#94A3B8] text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0284C7] focus:border-transparent transition-all"
             />
           </div>
         </div>
@@ -115,7 +115,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full mt-2 py-3 px-4 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 disabled:opacity-50 transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full mt-2 py-3 px-4 rounded-xl text-sm font-bold text-white bg-[#026AA2] hover:bg-[#025785] disabled:opacity-50 transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:ring-offset-2 focus-visible:outline-hidden"
         >
           {isLoading ? (
             <>
@@ -132,9 +132,9 @@ function LoginForm() {
       </form>
 
       {/* Info Default Credentials untuk Development */}
-      <div className="pt-4 border-t border-slate-800 text-center text-xs text-slate-500 space-y-1">
-        <p className="font-semibold text-slate-400">Akses Pengurus Default:</p>
-        <p className="font-mono text-slate-400">admin@skansaba.sch.id / skansaba2026kristen</p>
+      <div className="pt-4 border-t border-[#F1F5F9] text-center text-xs text-[#64748B] space-y-1">
+        <p className="font-semibold text-[#475569]">Akses Pengurus Default:</p>
+        <p className="font-mono text-[#64748B]">admin@skansaba.sch.id / skansaba2026kristen</p>
       </div>
     </div>
   );
@@ -142,17 +142,13 @@ function LoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Background Decorative elements */}
-      <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:24px_24px]" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="min-h-screen bg-gradient-to-br from-[#F0F4F1] via-[#FAFBF9] to-[#F1F5F2] bg-fixed flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4">
         {/* Link Kembali */}
         <div className="mb-6 text-center sm:text-left">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-[#475569] hover:text-[#026AA2] transition-colors focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:outline-hidden rounded-xs"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Kembali ke Website Publik</span>
@@ -162,9 +158,9 @@ export default function AdminLoginPage() {
         {/* Suspense Wrapper to prevent CSR bailout on useSearchParams */}
         <Suspense
           fallback={
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 text-center text-white">
-              <Loader2 className="w-8 h-8 animate-spin mx-auto text-blue-500" />
-              <p className="text-xs text-slate-400 mt-2">Memuat halaman login...</p>
+            <div className="bg-white border border-[#E2E8F0] rounded-3xl p-12 text-center text-[#0F172A] shadow-lg">
+              <Loader2 className="w-8 h-8 animate-spin mx-auto text-[#026AA2]" />
+              <p className="text-xs text-[#64748B] mt-2">Memuat halaman login...</p>
             </div>
           }
         >

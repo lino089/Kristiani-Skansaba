@@ -21,10 +21,10 @@ import {
 const ADMIN_MENUS = [
   { href: '/admin', label: 'Ringkasan Dasbor', icon: LayoutDashboard },
   { href: '/admin/pengumuman', label: 'Pengumuman', icon: Bell },
-  { href: '/admin/profil', label: 'Profil Organisasi', icon: Building2 },
-  { href: '/admin/anggota', label: 'Anggota & Alumni', icon: Users },
+  { href: '/admin/profil', label: 'Profil & Pembina', icon: Building2 },
+  { href: '/admin/anggota', label: 'Direktori Siswa & Alumni', icon: Users },
   { href: '/admin/prestasi', label: 'Prestasi', icon: Trophy },
-  { href: '/admin/kegiatan', label: 'Kegiatan & Acara', icon: Calendar },
+  { href: '/admin/kegiatan', label: 'Jadwal & Dokumentasi', icon: Calendar },
   { href: '/admin/galeri', label: 'Galeri Foto', icon: ImageIcon },
 ];
 
@@ -97,7 +97,7 @@ export default function AdminSidebar() {
         <div>
           <div className="p-6 border-b border-slate-800">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center bg-white/10 p-1 border border-white/10 shadow-md shadow-blue-500/20 flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center bg-white/10 p-1 border border-white/10 shadow-xs flex-shrink-0">
                 <Image
                   src="/LogoKristianiSkansaba.png"
                   alt="Logo Kristiani Skansaba"
@@ -125,9 +125,9 @@ export default function AdminSidebar() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileOpen(false)}
-                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:outline-hidden ${
                     active
-                      ? 'bg-blue-600 text-white font-semibold shadow-md shadow-blue-600/30'
+                      ? 'bg-[#026AA2] text-white font-semibold shadow-xs'
                       : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
                   }`}
                 >
@@ -144,10 +144,10 @@ export default function AdminSidebar() {
           <Link
             href="/"
             target="_blank"
-            className="flex items-center justify-between w-full px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="flex items-center justify-between w-full px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:outline-hidden"
           >
             <span className="flex items-center gap-2">
-              <ExternalLink className="w-3.5 h-3.5 text-blue-400" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#0284C7]" />
               <span>Buka Website Publik</span>
             </span>
           </Link>
@@ -156,7 +156,7 @@ export default function AdminSidebar() {
             type="button"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="flex items-center gap-2.5 w-full px-3.5 py-2.5 rounded-xl text-xs font-semibold text-red-400 hover:text-white hover:bg-red-950/50 border border-red-900/30 transition-colors"
+            className="flex items-center gap-2.5 w-full px-3.5 py-2.5 rounded-xl text-xs font-semibold text-red-400 hover:text-white hover:bg-red-950/50 border border-red-900/30 transition-colors focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:outline-hidden cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             <span>{isLoggingOut ? 'Sedang Keluar...' : 'Keluar (Logout)'}</span>

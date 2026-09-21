@@ -45,6 +45,16 @@ export default function AdminPengumumanPage() {
     };
   }, [refreshKey]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isModalOpen && !isSaving) {
+        setIsModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isModalOpen, isSaving]);
+
   const openCreateModal = () => {
     setEditingItem(null);
     setTitle('');
@@ -235,8 +245,14 @@ export default function AdminPengumumanPage() {
 
       {/* Modal Tambah / Edit Pengumuman */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 p-6 space-y-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200"
+          onClick={() => !isSaving && setIsModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="font-bold text-lg text-slate-900">
                 {editingItem ? 'Edit Pengumuman' : 'Tambah Pengumuman Baru'}
@@ -244,7 +260,8 @@ export default function AdminPengumumanPage() {
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                aria-label="Tutup Dialog (Escape)"
+                className="text-slate-400 hover:text-slate-600 p-1 focus-visible:ring-2 focus-visible:ring-[#026AA2] focus-visible:outline-hidden rounded-xs cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -261,7 +278,7 @@ export default function AdminPengumumanPage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Contoh: Pendaftaran Retret 2026 Dibuka"
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-hidden"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-[#026AA2] focus:outline-hidden"
                 />
               </div>
 
@@ -275,7 +292,7 @@ export default function AdminPengumumanPage() {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Tuliskan pengumuman secara rinci..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-hidden"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-[#026AA2] focus:outline-hidden"
                 />
               </div>
 
@@ -285,7 +302,7 @@ export default function AdminPengumumanPage() {
                   id="isActiveToggle"
                   checked={isActive}
                   onChange={(e) => setIsActive(e.target.checked)}
-                  className="w-4 h-4 text-blue-600 rounded-sm focus:ring-blue-500 cursor-pointer"
+                  className="w-4 h-4 text-[#026AA2] rounded-sm focus:ring-[#026AA2] cursor-pointer"
                 />
                 <label htmlFor="isActiveToggle" className="text-sm font-semibold text-slate-800 cursor-pointer">
                   Aktifkan di Banner Beranda
@@ -296,14 +313,14 @@ export default function AdminPengumumanPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-hidden cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 disabled:opacity-50 shadow-xs cursor-pointer"
+                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#026AA2] hover:bg-[#025785] disabled:opacity-50 shadow-xs cursor-pointer focus-visible:ring-2 focus-visible:ring-[#026AA2] focus-visible:ring-offset-2 focus-visible:outline-hidden"
                 >
                   {isSaving ? 'Menyimpan...' : 'Simpan Pengumuman'}
                 </button>

@@ -14,7 +14,7 @@ import {
 import { getDashboardMetrics, getActiveAnnouncement, getEvents } from '@/lib/data-store';
 
 export const metadata: Metadata = {
-  title: 'Ringkasan Dasbor Pengurus',
+  title: 'Ringkasan Dasbor Pengelola',
 };
 
 export default async function AdminDashboardPage() {
@@ -26,12 +26,12 @@ export default async function AdminDashboardPage() {
 
   const STAT_CARDS = [
     {
-      label: 'Total Anggota & Alumni',
+      label: 'Direktori Siswa & Alumni',
       value: metrics.total_members,
-      desc: 'Terdaftar dalam direktori',
+      desc: 'Tercatat dalam buku kenangan',
       href: '/admin/anggota',
       icon: Users,
-      color: 'bg-blue-50 text-blue-600 border-blue-200',
+      color: 'bg-[#E0F2FE] text-[#026AA2] border-[#BAE6FD]',
     },
     {
       label: 'Arsip Prestasi',
@@ -39,15 +39,15 @@ export default async function AdminDashboardPage() {
       desc: 'Penghargaan kejuaraan',
       href: '/admin/prestasi',
       icon: Trophy,
-      color: 'bg-amber-50 text-amber-600 border-amber-200',
+      color: 'bg-[#FEF3C7] text-[#B45309] border-[#FDE68A]',
     },
     {
-      label: 'Agenda Kegiatan',
+      label: 'Jadwal & Dokumentasi',
       value: metrics.total_events,
-      desc: `${metrics.upcoming_events_count} kegiatan mendatang`,
+      desc: `${metrics.upcoming_events_count} agenda mendatang`,
       href: '/admin/kegiatan',
       icon: Calendar,
-      color: 'bg-emerald-50 text-emerald-600 border-emerald-200',
+      color: 'bg-[#DCFCE7] text-[#15803D] border-[#BBF7D0]',
     },
     {
       label: 'Aset Galeri Foto',
@@ -55,7 +55,7 @@ export default async function AdminDashboardPage() {
       desc: 'Dokumentasi terunggah',
       href: '/admin/galeri',
       icon: ImageIcon,
-      color: 'bg-purple-50 text-purple-600 border-purple-200',
+      color: 'bg-[#EEF2FF] text-[#4338CA] border-[#C7D2FE]',
     },
   ];
 
@@ -69,10 +69,10 @@ export default async function AdminDashboardPage() {
             <span>Pusat Kendali Konten</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Ringkasan Dasbor Pengurus
+            Ringkasan Dasbor Pengelola
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Kelola seluruh informasi portal web resmi Komunitas Siswa Kristiani Skansaba.
+            Kelola informasi direktori siswa, jadwal ibadah, pengumuman, dan arsip dokumentasi Kristiani Skansaba.
           </p>
         </div>
 
@@ -172,9 +172,9 @@ export default async function AdminDashboardPage() {
           <div className="pt-3 border-t border-slate-100 flex justify-end">
             <Link
               href="/admin/pengumuman"
-              className="text-xs font-semibold text-blue-600 hover:text-blue-700"
+              className="text-xs font-semibold text-[#026AA2] hover:text-[#025785] hover:underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:outline-hidden rounded-xs"
             >
-              Kelola Pengumuman →
+              Kelola Pengumuman
             </Link>
           </div>
         </div>
@@ -193,7 +193,7 @@ export default async function AdminDashboardPage() {
               </div>
               <Link
                 href="/admin/kegiatan"
-                className="text-xs font-semibold text-blue-600 hover:text-blue-700"
+                className="text-xs font-semibold text-[#026AA2] hover:text-[#025785] hover:underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:outline-hidden rounded-xs"
               >
                 Lihat Semua ({events.length})
               </Link>
@@ -226,9 +226,9 @@ export default async function AdminDashboardPage() {
           <div className="pt-3 border-t border-slate-100 flex justify-end">
             <Link
               href="/admin/kegiatan"
-              className="text-xs font-semibold text-blue-600 hover:text-blue-700"
+              className="text-xs font-semibold text-[#026AA2] hover:text-[#025785] hover:underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:outline-hidden rounded-xs"
             >
-              Tambah / Edit Kegiatan →
+              Tambah / Edit Kegiatan
             </Link>
           </div>
         </div>

@@ -129,7 +129,7 @@ export default function AdminPrestasiPage() {
             <span>Manajemen Prestasi</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Arsipkan sertifikat penghargaan, piala, dan kejuaraan yang diraih anggota komunitas.
+            Arsipkan sertifikat penghargaan, piala, dan kejuaraan yang diraih siswa Kristiani.
           </p>
         </div>
 

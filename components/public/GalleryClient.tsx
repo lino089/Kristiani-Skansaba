@@ -39,33 +39,49 @@ export default function GalleryClient({ initialGallery }: GalleryClientProps) {
   // Lightbox handlers
   const openLightbox = (index: number) => setLightboxIndex(index);
   const closeLightbox = () => setLightboxIndex(null);
-  const showPrev = () => {
+  const showPrev = React.useCallback(() => {
     if (lightboxIndex === null) return;
     setLightboxIndex((lightboxIndex - 1 + filtered.length) % filtered.length);
-  };
-  const showNext = () => {
+  }, [lightboxIndex, filtered.length]);
+
+  const showNext = React.useCallback(() => {
     if (lightboxIndex === null) return;
     setLightboxIndex((lightboxIndex + 1) % filtered.length);
-  };
+  }, [lightboxIndex, filtered.length]);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (lightboxIndex === null) return;
+      if (e.key === 'Escape') {
+        closeLightbox();
+      } else if (e.key === 'ArrowLeft') {
+        showPrev();
+      } else if (e.key === 'ArrowRight') {
+        showNext();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxIndex, showPrev, showNext]);
 
   const currentItem = lightboxIndex !== null ? filtered[lightboxIndex] : null;
 
   return (
     <div className="space-y-8">
       {/* Filter Bar */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-white rounded-3xl p-5 border border-[#E2E8F0] shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Filter Tahun */}
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mr-1">
+          <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider mr-1">
             Tahun:
           </span>
           <button
             type="button"
             onClick={() => setSelectedYear('all')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:outline-hidden cursor-pointer ${
               selectedYear === 'all'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-[#026AA2] text-white shadow-xs'
+                : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
             }`}
           >
             Semua Tahun
@@ -75,10 +91,10 @@ export default function GalleryClient({ initialGallery }: GalleryClientProps) {
               key={year}
               type="button"
               onClick={() => setSelectedYear(year.toString())}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:outline-hidden cursor-pointer ${
                 selectedYear === year.toString()
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-[#026AA2] text-white shadow-xs'
+                  : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
               }`}
             >
               {year}
@@ -88,13 +104,13 @@ export default function GalleryClient({ initialGallery }: GalleryClientProps) {
 
         {/* Filter Acara */}
         <div className="flex items-center gap-2 w-full md:w-auto">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider flex-shrink-0">
+          <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider flex-shrink-0">
             Acara:
           </span>
           <select
             value={selectedEvent}
             onChange={(e) => setSelectedEvent(e.target.value)}
-            className="w-full md:w-64 px-3 py-1.5 rounded-lg text-xs border border-slate-200 bg-white font-medium text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-blue-600 cursor-pointer"
+            className="w-full md:w-64 px-3.5 py-2 rounded-xl text-xs border border-[#E2E8F0] bg-white font-medium text-[#0F172A] focus:outline-hidden focus:ring-2 focus:ring-[#0284C7] cursor-pointer"
           >
             <option value="all">Semua Jenis Acara</option>
             {availableEvents.map((evt) => (
@@ -108,9 +124,9 @@ export default function GalleryClient({ initialGallery }: GalleryClientProps) {
 
       {/* Grid Galeri (PRD Modul 6: Tata letak kisi masonry/grid responsif + Lazy Loading) */}
       {filtered.length === 0 ? (
-        <div className="bg-white rounded-2xl p-12 text-center border border-slate-200">
-          <ImageIcon className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <p className="font-semibold text-slate-700">Tidak ada foto dalam kategori ini.</p>
+        <div className="bg-white rounded-3xl p-12 text-center border border-[#E2E8F0] shadow-xs">
+          <ImageIcon className="w-12 h-12 text-[#94A3B8] mx-auto mb-3" />
+          <p className="font-semibold text-[#0F172A]">Tidak ada foto dalam kategori ini.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -118,7 +134,7 @@ export default function GalleryClient({ initialGallery }: GalleryClientProps) {
             <div
               key={item.id}
               onClick={() => openLightbox(idx)}
-              className="group relative cursor-pointer rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 shadow-xs hover:shadow-md transition-all"
+              className="group relative cursor-pointer rounded-3xl overflow-hidden border border-[#E2E8F0] bg-[#F1F5F9] shadow-xs hover:shadow-md transition-all"
             >
               <OptimizedImage
                 src={item.image_url}
@@ -129,14 +145,14 @@ export default function GalleryClient({ initialGallery }: GalleryClientProps) {
               />
 
               {/* Overlay Hover */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                <div className="flex items-center justify-between text-xs text-blue-300 font-semibold mb-1">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
+                <div className="flex items-center justify-between text-xs text-[#BAE6FD] font-semibold mb-1">
                   <span>{item.event_name}</span>
                   <span>{item.year}</span>
                 </div>
                 <h3 className="font-bold text-base leading-snug line-clamp-1">{item.title}</h3>
                 {item.description && (
-                  <p className="text-xs text-slate-300 line-clamp-2 mt-1 font-light">
+                  <p className="text-xs text-white/85 line-clamp-2 mt-1 font-light">
                     {item.description}
                   </p>
                 )}
@@ -148,7 +164,7 @@ export default function GalleryClient({ initialGallery }: GalleryClientProps) {
 
               {/* Badges pojok atas */}
               <div className="absolute top-3 right-3 opacity-90 group-hover:opacity-0 transition-opacity">
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-900/70 text-white backdrop-blur-xs">
+                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#0F172A]/80 text-white backdrop-blur-xs shadow-xs">
                   {item.year}
                 </span>
               </div>
@@ -170,8 +186,8 @@ export default function GalleryClient({ initialGallery }: GalleryClientProps) {
               e.stopPropagation();
               showPrev();
             }}
-            aria-label="Foto Sebelumnya"
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            aria-label="Foto Sebelumnya (Panah Kiri)"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-hidden cursor-pointer"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
@@ -183,8 +199,8 @@ export default function GalleryClient({ initialGallery }: GalleryClientProps) {
               e.stopPropagation();
               showNext();
             }}
-            aria-label="Foto Berikutnya"
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            aria-label="Foto Berikutnya (Panah Kanan)"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-hidden cursor-pointer"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
@@ -193,8 +209,8 @@ export default function GalleryClient({ initialGallery }: GalleryClientProps) {
           <button
             type="button"
             onClick={closeLightbox}
-            aria-label="Tutup Lightbox"
-            className="absolute top-5 right-5 z-20 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            aria-label="Tutup Lightbox (Escape)"
+            className="absolute top-5 right-5 z-20 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-hidden cursor-pointer"
           >
             <X className="w-6 h-6" />
           </button>
@@ -215,7 +231,7 @@ export default function GalleryClient({ initialGallery }: GalleryClientProps) {
 
             {/* Keterangan Foto */}
             <div className="text-center text-white max-w-xl px-4 space-y-1">
-              <div className="inline-flex items-center gap-2 text-xs font-semibold text-blue-300">
+              <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#CFE4D5]">
                 <span>{currentItem.event_name}</span>
                 <span>•</span>
                 <span>Tahun {currentItem.year}</span>

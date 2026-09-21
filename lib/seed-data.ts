@@ -10,9 +10,9 @@ import {
 export const INITIAL_ANNOUNCEMENTS: Announcement[] = [
   {
     id: 'ann-1',
-    title: 'Pendaftaran Retret Rohani & Pembinaan Karakter 2026 Telah Dibuka!',
+    title: 'Konfirmasi Retret Rohani & Pembinaan Karakter 2026 Telah Dibuka!',
     content:
-      'Diberitahukan kepada seluruh anggota Komunitas Siswa Kristiani Skansaba bahwa pendaftaran Retret Rohani 2026 di Wisma Sejahtera Kaliurang telah dibuka hingga 15 Oktober 2026. Silakan hubungi koordinator divisi acara untuk konfirmasi kamar.',
+      'Diberitahukan kepada seluruh siswa Kristen & Katolik SMK Negeri 1 Bantul bahwa konfirmasi kehadiran Retret Rohani 2026 di Wisma Sejahtera Kaliurang dibuka hingga 15 Oktober 2026. Silakan hubungi koordinator siswa / narahubung untuk informasi akomodasi.',
     is_active: true,
     created_at: '2026-09-01T08:00:00Z',
     updated_at: '2026-09-01T08:00:00Z',
@@ -30,85 +30,85 @@ export const INITIAL_ANNOUNCEMENTS: Announcement[] = [
 
 export const INITIAL_PROFILE: OrganizationProfile = {
   id: 'default',
-  name: 'Komunitas Siswa Kristiani Skansaba',
+  name: 'Persekutuan Siswa Kristiani Skansaba',
   school_name: 'SMK Negeri 1 Bantul',
   history:
-    'Komunitas Siswa Kristiani SMK Negeri 1 Bantul (Skansaba) didirikan pada tahun 2008 sebagai wadah pembinaan kerohanian, persekutuan doa, dan ruang bertumbuh bersama bagi siswa-siswi Kristen dan Katolik. Berawal dari perkumpulan doa sederhana di perpustakaan sekolah, komunitas ini terus berkembang menjadi organisasi kesiswaan kerohanian yang terstruktur dan aktif menyelenggarakan ibadah Jumat, peringatan hari besar keagamaan seperti Paskah dan Natal, retret kepemimpinan tahunan, hingga program kepedulian sosial di lingkungan Bantul dan sekitarnya.',
+    'Persekutuan Siswa Kristiani SMK Negeri 1 Bantul (Skansaba) merupakan ruang persekutuan kasih dan keluarga rohani bagi seluruh siswa-siswi beragama Kristen dan Katolik di lingkungan sekolah. Setiap siswa Kristiani secara wajar dan otomatis menjadi bagian dari persekutuan ini, khususnya pada momen peribadatan bersama di sekolah serta peringatan hari raya gerejawi seperti Natal dan Paskah. Tanpa sekat birokrasi formal, persekutuan ini berjalan dengan semangat persaudaraan, saling menopang dalam doa, dan bertumbuh bersama dalam iman dan keteladanan di bawah bimbingan bapak/ibu guru pembina agama.',
   vision:
-    'Menjadi wadah persekutuan siswa Kristiani yang berakar kuat dalam iman, bertumbuh dalam kasih persaudaraan, serta berbuah nyata dalam karakter, integritas, dan prestasi bagi kemuliaan Tuhan dan almamater Skansaba.',
+    'Menjadi persekutuan kasih dan keluarga rohani bagi siswa-siswi Kristen dan Katolik di SMKN 1 Bantul yang saling mendukung dalam doa, berakar dalam firman Tuhan, serta berbuah nyata dalam keteladanan karakter, integritas, dan persaudaraan yang tulus.',
   mission: [
-    'Menyelenggarakan ibadah persekutuan rutin yang membangun kehidupan rohani dan karakter Kristiani yang berintegritas.',
-    'Mewadahi talenta dan potensi seni, musik, kepemimpinan, dan multimedia para siswa demi pelayanan yang berdampak.',
-    'Mendorong anggota untuk mencapai keunggulan akademik dan non-akademik di tingkat regional maupun nasional sebagai saksi iman yang hidup.',
-    'Menghadirkan kasih nyata melalui aksi sosial, pelayanan masyarakat, dan kepedulian lingkungan secara berkelanjutan.',
-    'Mempererat hubungan persaudaraan antara siswa aktif, para alumni, guru pembina, dan pihak sekolah.',
+    'Menyelenggarakan persekutuan dan ibadah bersama yang hangat untuk memelihara kehidupan rohani di lingkungan sekolah.',
+    'Menjadi ruang persaudaraan di mana setiap siswa Kristen dan Katolik dapat saling mengenal, mendoakan, dan mendukung satu sama lain.',
+    'Mempersiapkan perayaan hari besar keagamaan (Natal dan Paskah sekolah) secara gotong royong dan penuh sukacita.',
+    'Mengembangkan talenta musik, pujian, dan pelayanan kasih tanpa membebani siswa dengan struktur birokrasi formal.',
+    'Menjaga hubungan silaturahmi yang erat antara siswa aktif, para alumni, dan bapak/ibu guru pembina agama.',
   ],
   structure: [
     {
       id: 'str-1',
-      role: 'Guru Pembina Rohani',
+      role: 'Guru Pembina Agama Kristen & Katolik',
       name: 'Dra. Maria Christine, M.Pd.',
       level: 'pembina',
       photo_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&auto=format&fit=crop&q=80',
     },
     {
       id: 'str-2',
-      role: 'Ketua Umum',
+      role: 'Koordinator Siswa (Angkatan 2024)',
       name: 'Jonathan Immanuel',
       level: 'inti',
       photo_url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=500&auto=format&fit=crop&q=80',
     },
     {
       id: 'str-3',
-      role: 'Wakil Ketua',
+      role: 'Wakil Koordinator Siswa',
       name: 'Grace Natalia',
       level: 'inti',
       photo_url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&auto=format&fit=crop&q=80',
     },
     {
       id: 'str-4',
-      role: 'Sekretaris',
+      role: 'Narahubung & Komunikasi',
       name: 'Ruth Deborah Simanjuntak',
       level: 'inti',
       photo_url: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500&auto=format&fit=crop&q=80',
     },
     {
       id: 'str-5',
-      role: 'Bendahara',
+      role: 'Koordinator Kas Pelayanan',
       name: 'David Christian Wibowo',
       level: 'inti',
       photo_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80',
     },
     {
       id: 'str-6',
-      role: 'Koordinator Divisi Acara & Ibadah',
+      role: 'PIC Ibadah Bersama',
       name: 'Samuel Pratama',
       level: 'divisi',
-      division: 'Divisi Acara & Ibadah',
+      division: 'Tim Ibadah & Liturgi',
       photo_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=80',
     },
     {
       id: 'str-7',
-      role: 'Koordinator Divisi Musik & Pujian',
+      role: 'PIC Musik & Pujian',
       name: 'Keisha Abigail',
       level: 'divisi',
-      division: 'Divisi Musik & Pujian',
+      division: 'Tim Musik & Pujian',
       photo_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop&q=80',
     },
     {
       id: 'str-8',
-      role: 'Koordinator Divisi Doa & Konseling',
+      role: 'PIC Persekutuan Doa',
       name: 'Daniel Kristianto',
       level: 'divisi',
-      division: 'Divisi Doa & Konseling',
+      division: 'Tim Doa Bersama',
       photo_url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&auto=format&fit=crop&q=80',
     },
     {
       id: 'str-9',
-      role: 'Koordinator Divisi Media & Dokumentasi',
+      role: 'PIC Dokumentasi & Media',
       name: 'Clara Evelyn',
       level: 'divisi',
-      division: 'Divisi Media & Dokumentasi',
+      division: 'Tim Dokumentasi & Arsip',
       photo_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80',
     },
   ],
@@ -119,7 +119,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-1',
     name: 'Jonathan Immanuel',
-    role: 'Ketua Umum (2025/2026)',
+    role: 'Koordinator Siswa (2025/2026)',
     class_year: 2024,
     is_alumni: false,
     photo_url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=500&auto=format&fit=crop&q=80',
@@ -130,7 +130,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-2',
     name: 'Grace Natalia',
-    role: 'Wakil Ketua (2025/2026)',
+    role: 'Wakil Koordinator Siswa',
     class_year: 2024,
     is_alumni: false,
     photo_url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&auto=format&fit=crop&q=80',
@@ -141,7 +141,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-3',
     name: 'Ruth Deborah Simanjuntak',
-    role: 'Sekretaris',
+    role: 'Narahubung & Komunikasi',
     class_year: 2025,
     is_alumni: false,
     photo_url: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500&auto=format&fit=crop&q=80',
@@ -152,7 +152,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-4',
     name: 'David Christian Wibowo',
-    role: 'Bendahara',
+    role: 'Koordinator Kas Pelayanan',
     class_year: 2024,
     is_alumni: false,
     photo_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80',
@@ -163,7 +163,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-5',
     name: 'Samuel Pratama',
-    role: 'Koordinator Acara',
+    role: 'PIC Ibadah Bersama',
     class_year: 2025,
     is_alumni: false,
     photo_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=80',
@@ -174,7 +174,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-6',
     name: 'Keisha Abigail',
-    role: 'Koordinator Musik',
+    role: 'PIC Musik & Pujian',
     class_year: 2025,
     is_alumni: false,
     photo_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop&q=80',
@@ -185,7 +185,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-7',
     name: 'Daniel Kristianto',
-    role: 'Koordinator Doa',
+    role: 'PIC Persekutuan Doa',
     class_year: 2026,
     is_alumni: false,
     photo_url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&auto=format&fit=crop&q=80',
@@ -196,7 +196,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-8',
     name: 'Clara Evelyn',
-    role: 'Koordinator Multimedia',
+    role: 'PIC Dokumentasi & Media',
     class_year: 2026,
     is_alumni: false,
     photo_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80',
@@ -207,7 +207,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-9',
     name: 'Michael Aditya Nugroho',
-    role: 'Alumni (Ketua Angkatan 2023)',
+    role: 'Alumni (Angkatan 2023)',
     class_year: 2023,
     is_alumni: true,
     photo_url: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=500&auto=format&fit=crop&q=80',
@@ -218,7 +218,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-10',
     name: 'Priskila Sarah Santoso',
-    role: 'Alumni (Sekretaris Angkatan 2023)',
+    role: 'Alumni (Angkatan 2023)',
     class_year: 2023,
     is_alumni: true,
     photo_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format&fit=crop&q=80',
@@ -229,7 +229,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-11',
     name: 'Gabriel Ezra Permana',
-    role: 'Alumni (Divisi Musik 2022)',
+    role: 'Alumni (Angkatan 2022)',
     class_year: 2022,
     is_alumni: true,
     photo_url: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=500&auto=format&fit=crop&q=80',
@@ -349,7 +349,7 @@ export const INITIAL_EVENTS: EventItem[] = [
     summary:
       'Penyaluran bantuan sembako, perlengkapan belajar, dan bernyanyi bersama adik-adik panti asuhan.',
     description:
-      'Sebagai wujud nyata kasih Kristus yang melayani sesama, komunitas siswa Kristiani mengumpulkan donasi sukarela berupa buku, alat tulis, pakaian layak pakai, dan paket sembako untuk disalurkan ke panti asuhan mitra.',
+      'Sebagai wujud nyata kasih Kristus yang melayani sesama, persekutuan siswa Kristiani mengumpulkan donasi sukarela berupa buku, alat tulis, pakaian layak pakai, dan paket sembako untuk disalurkan ke panti asuhan mitra.',
     cover_image_url:
       'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1000&auto=format&fit=crop&q=80',
     gallery_urls: [
@@ -368,7 +368,7 @@ export const INITIAL_EVENTS: EventItem[] = [
     summary:
       'Peringatan kelahiran Kristus dengan tema "Terang di Tengah Dunia", dihadiri oleh seluruh siswa, alumni, dan dewan guru.',
     description:
-      'Ibadah dan perayaan Natal berlangsung dengan penuh khidmat dan sukacita. Ditampilkan drama musikal kelahiran Yesus, penampilan vokal grup persembahan siswa kelas X, XI, dan XII, serta renungan natal oleh Pdt. Stefanus dari Bantul. Momen penyalaan lilin natal menjadi puncak keharuan yang memperkuat persatuan komunitas.',
+      'Ibadah dan perayaan Natal berlangsung dengan penuh khidmat dan sukacita. Ditampilkan drama musikal kelahiran Yesus, penampilan vokal grup persembahan siswa kelas X, XI, dan XII, serta renungan natal oleh Pdt. Stefanus dari Bantul. Momen penyalaan lilin natal menjadi puncak keharuan yang memperkuat tali persaudaraan keluarga besar Kristiani Skansaba.',
     cover_image_url:
       'https://images.unsplash.com/photo-1543258103-a62bdc069871?w=1000&auto=format&fit=crop&q=80',
     gallery_urls: [
@@ -380,16 +380,16 @@ export const INITIAL_EVENTS: EventItem[] = [
   },
   {
     id: 'ev-5',
-    title: 'Latihan Dasar Kepemimpinan Kristen (LDKK) 2025',
-    slug: 'latihan-dasar-kepemimpinan-kristen-2025',
+    title: 'Pembekalan & Temu Keakraban Siswa Kristiani 2025',
+    slug: 'pembekalan-temu-keakraban-siswa-kristiani-2025',
     event_date: '2025-10-11',
     time: '08.00 - 16.00 WIB',
     location: 'Laboratorium Pembelajaran Skansaba',
     status: 'completed',
     summary:
-      'Pelatihan kepengurusan, manajemen organisasi, dan kepemimpinan berlandaskan nilai-nilai Servant Leadership.',
+      'Sesi pembekalan kebersamaan, pengenalan talenta pelayanan, dan kepemimpinan kasih persaudaraan (Servant Leadership).',
     description:
-      'Program pembekalan bagi pengurus baru masa bakti 2025/2026 yang mengupas tuntas etika kepemimpinan Kristen, penyusunan program kerja, pengelolaan media sosial komunitas, serta simulasi manajemen konflik.',
+      'Pertemuan keakraban bagi siswa-siswi Kristen dan Katolik untuk saling mengenal antartingkat kelas, berbagi pengalaman pelayanan ibadah bersama, serta merancang kebersamaan Natal dan Paskah secara bersahaja.',
     cover_image_url:
       'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1000&auto=format&fit=crop&q=80',
     gallery_urls: [
