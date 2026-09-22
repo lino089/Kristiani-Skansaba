@@ -1,11 +1,15 @@
 import { google } from 'googleapis';
 import { Readable } from 'stream';
 
-const serviceAccountEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || '';
-const privateKey = (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
-const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID || '';
+function getGDriveConfig() {
+  const serviceAccountEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || '';
+  const privateKey = (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
+  const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID || '';
+  return { serviceAccountEmail, privateKey, folderId };
+}
 
 export function isGoogleDriveConfigured(): boolean {
+  const { serviceAccountEmail, privateKey } = getGDriveConfig();
   return Boolean(
     serviceAccountEmail &&
     privateKey &&
@@ -31,6 +35,8 @@ export async function uploadToGoogleDrive(
       url: dataUri,
     };
   }
+
+  const { serviceAccountEmail, privateKey, folderId } = getGDriveConfig();
 
   const auth = new google.auth.JWT({
     email: serviceAccountEmail,

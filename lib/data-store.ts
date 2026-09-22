@@ -15,7 +15,7 @@ import {
   INITIAL_EVENTS,
   INITIAL_GALLERY,
 } from './seed-data';
-import { isSupabaseConfigured, supabase } from './supabase';
+import { isSupabaseConfigured, supabaseAdmin as supabase } from './supabase';
 
 // In-memory fallback stores (cloned from seed data)
 let mockAnnouncements: Announcement[] = [...INITIAL_ANNOUNCEMENTS];
