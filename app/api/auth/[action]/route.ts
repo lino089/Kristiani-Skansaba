@@ -43,27 +43,29 @@ export async function POST(
 
       let isAuthenticated = false;
 
-      // 2. Check against real admin credentials configured in environment variables (.env.local)
-      const configuredEmail = process.env.ADMIN_EMAIL;
-      const configuredPassword = process.env.ADMIN_PASSWORD;
-
-      if (
-        configuredEmail &&
-        configuredPassword &&
-        inputEmail === configuredEmail.trim().toLowerCase() &&
-        inputPassword === configuredPassword
-      ) {
-        isAuthenticated = true;
-      }
-
-      // 3. If Supabase Auth is configured and not yet authenticated, try Supabase sign in
-      if (!isAuthenticated && isSupabaseConfigured() && supabase) {
+      // 2. Primary: Authenticate directly via Supabase Auth
+      if (isSupabaseConfigured() && supabase) {
         const { data, error } = await supabase.auth.signInWithPassword({
           email: inputEmail,
           password: inputPassword,
         });
 
         if (!error && data.session) {
+          isAuthenticated = true;
+        }
+      }
+
+      // 3. Fallback: Check against environment variables (.env.local) if Supabase Auth not matched
+      if (!isAuthenticated) {
+        const configuredEmail = process.env.ADMIN_EMAIL;
+        const configuredPassword = process.env.ADMIN_PASSWORD;
+
+        if (
+          configuredEmail &&
+          configuredPassword &&
+          inputEmail === configuredEmail.trim().toLowerCase() &&
+          inputPassword === configuredPassword
+        ) {
           isAuthenticated = true;
         }
       }
