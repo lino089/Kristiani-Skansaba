@@ -268,55 +268,65 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {latestAchievements.map((ach) => (
-              <div
-                key={ach.id}
-                className="bg-white rounded-3xl p-6 border border-[#E2E8F0] shadow-xs hover:shadow-md hover:border-[#0284C7]/40 transition-all flex flex-col justify-between group"
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-[#FEF3C7] text-[#B45309] border border-[#FDE68A]">
-                      <Trophy className="w-3.5 h-3.5" />
-                      Tingkat {ach.level}
-                    </span>
-                    <span className="text-xs font-semibold text-[#64748B]">
-                      Tahun {ach.year}
-                    </span>
+          {latestAchievements.length === 0 ? (
+            <div className="bg-white p-12 text-center rounded-3xl border border-[#E2E8F0] shadow-xs">
+              <Trophy className="w-12 h-12 text-[#94A3B8] mx-auto mb-3" />
+              <p className="font-semibold text-[#0F172A]">Belum ada data prestasi yang ditampilkan.</p>
+              <p className="text-xs text-[#64748B] mt-1">
+                Dokumentasi capaian dan penghargaan siswa akan diperbarui secara berkala.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+              {latestAchievements.map((ach) => (
+                <div
+                  key={ach.id}
+                  className="bg-white rounded-3xl p-6 border border-[#E2E8F0] shadow-xs hover:shadow-md hover:border-[#0284C7]/40 transition-all flex flex-col justify-between group"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-4">
+                      <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-[#FEF3C7] text-[#B45309] border border-[#FDE68A]">
+                        <Trophy className="w-3.5 h-3.5" />
+                        Tingkat {ach.level}
+                      </span>
+                      <span className="text-xs font-semibold text-[#64748B]">
+                        Tahun {ach.year}
+                      </span>
+                    </div>
+
+                    <h3 className="font-bold text-lg text-[#0F172A] group-hover:text-[#026AA2] transition-colors">
+                      {ach.title}
+                    </h3>
+
+                    <div className="mt-3 flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-[#E0F2FE] flex items-center justify-center text-[#0284C7] font-bold text-xs">
+                        {ach.recipient_name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#64748B]">Penerima:</p>
+                        <p className="text-sm font-semibold text-[#0F172A]">{ach.recipient_name}</p>
+                      </div>
+                    </div>
+
+                    {ach.description && (
+                      <p className="text-xs text-[#475569] mt-3 line-clamp-2 leading-relaxed">
+                        {ach.description}
+                      </p>
+                    )}
                   </div>
 
-                  <h3 className="font-bold text-lg text-[#0F172A] group-hover:text-[#026AA2] transition-colors">
-                    {ach.title}
-                  </h3>
-
-                  <div className="mt-3 flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-[#E0F2FE] flex items-center justify-center text-[#0284C7] font-bold text-xs">
-                      {ach.recipient_name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="text-xs text-[#64748B]">Penerima:</p>
-                      <p className="text-sm font-semibold text-[#0F172A]">{ach.recipient_name}</p>
-                    </div>
+                  <div className="mt-6 pt-4 border-t border-[#F1F5F9]">
+                    <Link
+                      href="/prestasi"
+                      className="text-xs font-semibold text-[#026AA2] hover:text-[#025785] hover:underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:outline-hidden rounded-xs transition-all"
+                    >
+                      Lihat Bukti Piagam
+                    </Link>
                   </div>
-
-                  {ach.description && (
-                    <p className="text-xs text-[#475569] mt-3 line-clamp-2 leading-relaxed">
-                      {ach.description}
-                    </p>
-                  )}
                 </div>
-
-                <div className="mt-6 pt-4 border-t border-[#F1F5F9]">
-                  <Link
-                    href="/prestasi"
-                    className="text-xs font-semibold text-[#026AA2] hover:text-[#025785] hover:underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:outline-hidden rounded-xs transition-all"
-                  >
-                    Lihat Bukti Piagam
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -343,28 +353,38 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {previewGallery.map((item) => (
-            <Link
-              key={item.id}
-              href="/galeri"
-              className="group relative rounded-2xl overflow-hidden border border-[#E2E8F0] shadow-xs block focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:outline-hidden"
-            >
-              <OptimizedImage
-                src={item.image_url}
-                alt={item.title}
-                aspectRatio="1/1"
-                className="group-hover:scale-110 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-white">
-                <span className="text-[10px] font-semibold text-[#BAE6FD]">
-                  {item.year} • {item.event_name}
-                </span>
-                <p className="text-xs font-bold truncate">{item.title}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {previewGallery.length === 0 ? (
+          <div className="bg-white p-12 text-center rounded-3xl border border-[#E2E8F0] shadow-xs">
+            <Camera className="w-12 h-12 text-[#94A3B8] mx-auto mb-3" />
+            <p className="font-semibold text-[#0F172A]">Belum ada dokumentasi foto dalam galeri.</p>
+            <p className="text-xs text-[#64748B] mt-1">
+              Arsip foto perayaan, ibadah bersama, dan kegiatan kebersamaan akan segera diunggah.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {previewGallery.map((item) => (
+              <Link
+                key={item.id}
+                href="/galeri"
+                className="group relative rounded-2xl overflow-hidden border border-[#E2E8F0] shadow-xs block focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:outline-hidden"
+              >
+                <OptimizedImage
+                  src={item.image_url}
+                  alt={item.title}
+                  aspectRatio="1/1"
+                  className="group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-white">
+                  <span className="text-[10px] font-semibold text-[#BAE6FD]">
+                    {item.year} • {item.event_name}
+                  </span>
+                  <p className="text-xs font-bold truncate">{item.title}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

@@ -3,20 +3,25 @@ import {
   getAnnouncements,
   saveAnnouncement,
   deleteAnnouncement,
+  deleteAnnouncements,
   getProfile,
   updateProfile,
   getMembers,
   saveMember,
   deleteMember,
+  deleteMembers,
   getAchievements,
   saveAchievement,
   deleteAchievement,
+  deleteAchievements,
   getEvents,
   saveEvent,
   deleteEvent,
+  deleteEvents,
   getGallery,
   saveGalleryItem,
   deleteGalleryItem,
+  deleteGalleryItems,
 } from '@/lib/data-store';
 
 export async function GET(
@@ -82,7 +87,7 @@ export async function POST(
   } catch (error) {
     console.error(`Error saving ${entity}:`, error);
     return NextResponse.json(
-      { success: false, message: 'Gagal menyimpan data.' },
+      { success: false, message: error instanceof Error ? error.message : 'Gagal menyimpan data.' },
       { status: 500 }
     );
   }
@@ -94,9 +99,23 @@ export async function DELETE(
 ) {
   const { entity } = await params;
   const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
+  const singleId = searchParams.get('id');
 
-  if (!id) {
+  let ids: string[] = [];
+  if (singleId) {
+    ids = [singleId];
+  } else {
+    try {
+      const body = await request.json();
+      if (Array.isArray(body?.ids)) {
+        ids = body.ids.filter(Boolean);
+      }
+    } catch {
+      // Body was not JSON
+    }
+  }
+
+  if (ids.length === 0) {
     return NextResponse.json({ error: 'ID tidak disertakan' }, { status: 400 });
   }
 
@@ -104,29 +123,29 @@ export async function DELETE(
     let success = false;
     switch (entity) {
       case 'announcements':
-        success = await deleteAnnouncement(id);
+        success = await deleteAnnouncements(ids);
         break;
       case 'members':
-        success = await deleteMember(id);
+        success = await deleteMembers(ids);
         break;
       case 'achievements':
-        success = await deleteAchievement(id);
+        success = await deleteAchievements(ids);
         break;
       case 'events':
-        success = await deleteEvent(id);
+        success = await deleteEvents(ids);
         break;
       case 'gallery':
-        success = await deleteGalleryItem(id);
+        success = await deleteGalleryItems(ids);
         break;
       default:
         return NextResponse.json({ error: 'Entitas tidak ditemukan' }, { status: 404 });
     }
 
-    return NextResponse.json({ success });
+    return NextResponse.json({ success, count: ids.length });
   } catch (error) {
     console.error(`Error deleting from ${entity}:`, error);
     return NextResponse.json(
-      { success: false, message: 'Gagal menghapus data.' },
+      { success: false, message: error instanceof Error ? error.message : 'Gagal menghapus data.' },
       { status: 500 }
     );
   }

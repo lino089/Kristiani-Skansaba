@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Siswa Kristiani Skansaba',
-    default: 'Portal Siswa & Alumni Kristiani Skansaba - SMK Negeri 1 Bantul',
+    template: '%s | Kristiani Skansaba',
+    default: 'Kristiani Skansaba',
   },
   description:
     'Portal Informasi, Arsip Dokumentasi, dan Direktori Siswa & Alumni Kristiani SMK Negeri 1 Bantul (Skansaba). Ruang persekutuan kekeluargaan oikumene bagi siswa-siswi Kristen dan Katolik.',
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'id_ID',
     url: '/',
-    siteName: 'Persekutuan Siswa Kristiani Skansaba',
-    title: 'Portal Siswa & Alumni Kristiani Skansaba - SMK Negeri 1 Bantul',
+    siteName: 'Kristiani Skansaba',
+    title: 'Kristiani Skansaba',
     description:
       'Portal Informasi, Arsip Dokumentasi, dan Direktori Siswa & Alumni Kristiani SMK Negeri 1 Bantul (Skansaba).',
     images: [

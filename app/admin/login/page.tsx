@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, Suspense } from 'react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import { Lock, Mail, ArrowLeft, Loader2, AlertCircle, ShieldCheck } from 'lucide-react';
+import { Lock, Mail, ArrowLeft, Loader2, AlertCircle, ShieldCheck, X } from 'lucide-react';
 import Link from 'next/link';
 
 function LoginForm() {
@@ -16,10 +16,46 @@ function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  // Prank honeypot states
+  const [showPrankModal, setShowPrankModal] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (showPrankModal && videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {
+        // Autoplay with sound might need user interaction or controls
+      });
+    } else if (!showPrankModal && videoRef.current) {
+      videoRef.current.pause();
+    }
+  }, [showPrankModal]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showPrankModal) {
+        setShowPrankModal(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showPrankModal]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setErrorMsg(null);
+
+    // Trap specific honeypot credentials directly on client
+    if (
+      email.trim().toLowerCase() === 'admin@skansaba.sch.id' &&
+      password === 'skansaba2026kristen'
+    ) {
+      setShowPrankModal(true);
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
       const res = await fetch('/api/auth/login', {
@@ -29,6 +65,11 @@ function LoginForm() {
       });
 
       const data = await res.json();
+
+      if (data.isPrank) {
+        setShowPrankModal(true);
+        return;
+      }
 
       if (res.ok && data.success) {
         router.push(from);
@@ -136,6 +177,83 @@ function LoginForm() {
         <p className="font-semibold text-[#475569]">Akses Pengurus Default:</p>
         <p className="font-mono text-[#64748B]">admin@skansaba.sch.id / skansaba2026kristen</p>
       </div>
+
+      {/* Prank Meme Video Modal (Honeypot Trap) */}
+      {showPrankModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setShowPrankModal(false)}
+        >
+          <div
+            className="relative w-full max-w-lg bg-slate-900 border border-slate-700/80 rounded-3xl overflow-hidden shadow-2xl text-white animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-slate-900/90">
+              <div className="flex items-center gap-2.5">
+                <span className="text-xl">🤣</span>
+                <h3 className="font-bold text-sm sm:text-base text-amber-400 tracking-tight">
+                  Reaksi Gue....🤣
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPrankModal(false)}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                title="Tutup Modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Video Area */}
+            <div className="relative bg-black flex items-center justify-center min-h-[260px] max-h-[65vh] overflow-hidden">
+              <video
+                ref={videoRef}
+                src="/prank.mp4"
+                autoPlay
+                controls
+                playsInline
+                loop
+                className="w-full h-full max-h-[60vh] object-contain"
+                onError={() => setVideoError(true)}
+              />
+
+              {videoError && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-slate-900/95 space-y-3">
+                  <span className="text-4xl">🎬</span>
+                  <p className="font-bold text-amber-400 text-sm">
+                    Video Prank Belum Ditemukan!
+                  </p>
+                  <p className="text-xs text-slate-300 max-w-sm leading-relaxed">
+                    Silakan letakkan file video meme Anda ke dalam folder:
+                  </p>
+                  <code className="text-amber-300 text-xs font-mono bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg select-all">
+                    public/prank.mp4
+                  </code>
+                  <p className="text-[11px] text-slate-400 max-w-xs mt-1">
+                    (Pastikan nama filenya tepat: <strong>prank.mp4</strong> di dalam folder <strong>public</strong>)
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 sm:p-5 text-center space-y-3 bg-slate-950/70 border-t border-slate-800">
+              <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
+                Maaf developernya ga sepolos itu 🤣🙏
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowPrankModal(false)}
+                className="w-full sm:w-auto px-6 py-2 rounded-xl text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 shadow-md transition-all cursor-pointer"
+              >
+                Tutup &amp; Coba Lagi
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

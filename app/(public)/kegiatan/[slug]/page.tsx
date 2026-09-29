@@ -10,6 +10,8 @@ interface EventPageProps {
   }>;
 }
 
+export const dynamicParams = true;
+
 // Generate Static Params for build time SSG
 export async function generateStaticParams() {
   const events = await getEvents();

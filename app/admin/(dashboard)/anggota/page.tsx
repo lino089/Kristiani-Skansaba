@@ -44,6 +44,11 @@ export default function AdminAnggotaPage() {
   const [deleteTarget, setDeleteTarget] = useState<Member | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Bulk selection states
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+  const [isBulkConfirmOpen, setIsBulkConfirmOpen] = useState(false);
+
   useEffect(() => {
     let ignore = false;
     async function loadMembers() {
@@ -51,7 +56,7 @@ export default function AdminAnggotaPage() {
         const res = await fetch('/api/admin/members');
         const data = await res.json();
         if (!ignore) {
-          setMembers(data);
+          setMembers(Array.isArray(data) ? data : []);
         }
       } catch (e) {
         console.error(e);
@@ -147,12 +152,58 @@ export default function AdminAnggotaPage() {
       });
       if (res.ok) {
         setDeleteTarget(null);
+        setSelectedIds((prev) => prev.filter((id) => id !== deleteTarget.id));
         setRefreshKey((k) => k + 1);
       }
     } catch (err) {
       console.error(err);
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const isAllSelected =
+    filteredMembers.length > 0 &&
+    filteredMembers.every((m) => selectedIds.includes(m.id));
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      const filteredIdSet = new Set(filteredMembers.map((m) => m.id));
+      setSelectedIds(selectedIds.filter((id) => !filteredIdSet.has(id)));
+    } else {
+      const combined = new Set([...selectedIds, ...filteredMembers.map((m) => m.id)]);
+      setSelectedIds(Array.from(combined));
+    }
+  };
+
+  const toggleSelectOne = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    setIsBulkDeleting(true);
+    try {
+      const res = await fetch('/api/admin/members', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedIds([]);
+        setIsBulkConfirmOpen(false);
+        setRefreshKey((k) => k + 1);
+      } else {
+        alert(data.message || 'Gagal menghapus data.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Terjadi kesalahan saat menghapus data.');
+    } finally {
+      setIsBulkDeleting(false);
     }
   };
 
@@ -214,6 +265,35 @@ export default function AdminAnggotaPage() {
         </div>
       </div>
 
+      {/* Bulk Action Bar */}
+      {selectedIds.length > 0 && (
+        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200 shadow-xs">
+          <div className="flex items-center gap-2 text-xs font-bold text-blue-900">
+            <span className="px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-xs font-bold">
+              {selectedIds.length}
+            </span>
+            <span>siswa &amp; alumni terpilih</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setSelectedIds([])}
+              className="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50 transition-colors cursor-pointer"
+            >
+              Batal Pilihan
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsBulkConfirmOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-red-600 hover:bg-red-500 text-white shadow-xs transition-all cursor-pointer"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Hapus {selectedIds.length} Data Terpilih</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Tabel Data Anggota */}
       {isLoading ? (
         <div className="py-20 text-center">
@@ -231,6 +311,15 @@ export default function AdminAnggotaPage() {
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 text-slate-600 text-xs uppercase font-bold tracking-wider border-b border-slate-200">
                 <tr>
+                  <th className="w-12 px-4 py-4 text-center">
+                    <input
+                      type="checkbox"
+                      checked={isAllSelected}
+                      onChange={toggleSelectAll}
+                      aria-label="Pilih semua data siswa"
+                      className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                    />
+                  </th>
                   <th className="px-6 py-4">Profil &amp; Nama</th>
                   <th className="px-6 py-4">Angkatan &amp; Status</th>
                   <th className="px-6 py-4">Kontak / Sosmed</th>
@@ -239,7 +328,21 @@ export default function AdminAnggotaPage() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {filteredMembers.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr
+                    key={item.id}
+                    className={`hover:bg-slate-50/70 transition-colors ${
+                      selectedIds.includes(item.id) ? 'bg-blue-50/40' : ''
+                    }`}
+                  >
+                    <td className="w-12 px-4 py-4 text-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(item.id)}
+                        onChange={() => toggleSelectOne(item.id)}
+                        aria-label={`Pilih ${item.name}`}
+                        className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                      />
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-11 h-11 rounded-full overflow-hidden bg-slate-100 flex-shrink-0">
@@ -449,6 +552,17 @@ export default function AdminAnggotaPage() {
         isLoading={isDeleting}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
+      />
+
+      {/* Dialog Konfirmasi Hapus Masal */}
+      <ConfirmDialog
+        isOpen={isBulkConfirmOpen}
+        title="Hapus Data Terpilih?"
+        message={`Apakah Anda yakin ingin menghapus ${selectedIds.length} data siswa/alumni yang dipilih? Tindakan ini tidak dapat dibatalkan.`}
+        confirmLabel={`Ya, Hapus ${selectedIds.length} Data`}
+        isLoading={isBulkDeleting}
+        onConfirm={handleBulkDelete}
+        onCancel={() => setIsBulkConfirmOpen(false)}
       />
     </div>
   );

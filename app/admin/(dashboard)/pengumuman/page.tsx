@@ -22,6 +22,11 @@ export default function AdminPengumumanPage() {
   const [deleteTarget, setDeleteTarget] = useState<Announcement | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Batch selection states
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+  const [isBulkConfirmOpen, setIsBulkConfirmOpen] = useState(false);
+
   useEffect(() => {
     let ignore = false;
     async function loadAnnouncements() {
@@ -29,7 +34,8 @@ export default function AdminPengumumanPage() {
         const res = await fetch('/api/admin/announcements');
         const data = await res.json();
         if (!ignore) {
-          setAnnouncements(data);
+          setAnnouncements(Array.isArray(data) ? data : []);
+          setSelectedIds([]);
         }
       } catch (e) {
         console.error(e);
@@ -114,6 +120,43 @@ export default function AdminPengumumanPage() {
     }
   };
 
+  const isAllSelected = announcements.length > 0 && selectedIds.length === announcements.length;
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(announcements.map((item) => item.id));
+    }
+  };
+
+  const toggleSelectOne = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    setIsBulkDeleting(true);
+    try {
+      const res = await fetch('/api/admin/announcements', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds }),
+      });
+      if (res.ok) {
+        setSelectedIds([]);
+        setIsBulkConfirmOpen(false);
+        setRefreshKey((k) => k + 1);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  };
+
   const toggleActive = async (item: Announcement) => {
     try {
       await fetch('/api/admin/announcements', {
@@ -154,6 +197,35 @@ export default function AdminPengumumanPage() {
         </button>
       </div>
 
+      {/* Bulk Action Toolbar */}
+      {selectedIds.length > 0 && (
+        <div className="flex items-center justify-between bg-blue-50/90 border border-blue-200/80 px-4 py-3 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold">
+              {selectedIds.length}
+            </span>
+            <span className="text-sm font-semibold text-blue-900">
+              {selectedIds.length} pengumuman dipilih
+            </span>
+            <button
+              type="button"
+              onClick={() => setSelectedIds([])}
+              className="text-xs text-blue-700 hover:text-blue-900 underline font-medium ml-2 cursor-pointer"
+            >
+              Batalkan Pilihan
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsBulkConfirmOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-500 shadow-xs cursor-pointer transition-colors"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Hapus {selectedIds.length} Pengumuman Terpilih</span>
+          </button>
+        </div>
+      )}
+
       {/* Tabel Data Pengumuman */}
       {isLoading ? (
         <div className="py-20 text-center">
@@ -172,6 +244,15 @@ export default function AdminPengumumanPage() {
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 text-slate-600 text-xs uppercase font-bold tracking-wider border-b border-slate-200">
                 <tr>
+                  <th className="w-12 px-4 py-4 text-center">
+                    <input
+                      type="checkbox"
+                      checked={isAllSelected}
+                      onChange={toggleSelectAll}
+                      className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer"
+                      title="Pilih Semua"
+                    />
+                  </th>
                   <th className="px-6 py-4">Judul &amp; Konten</th>
                   <th className="px-6 py-4">Status Banner</th>
                   <th className="px-6 py-4">Dibuat Pada</th>
@@ -179,64 +260,80 @@ export default function AdminPengumumanPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {announcements.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="px-6 py-4 max-w-md">
-                      <p className="font-bold text-slate-900">{item.title}</p>
-                      <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
-                        {item.content}
-                      </p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <button
-                        type="button"
-                        onClick={() => toggleActive(item)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
-                          item.is_active
-                            ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
-                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                        }`}
-                      >
-                        {item.is_active ? (
-                          <>
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                            <span>Aktif</span>
-                          </>
-                        ) : (
-                          <>
-                            <XCircle className="w-3.5 h-3.5 text-slate-400" />
-                            <span>Non-aktif</span>
-                          </>
-                        )}
-                      </button>
-                    </td>
-                    <td className="px-6 py-4 text-xs text-slate-500">
-                      {new Date(item.created_at).toLocaleDateString('id-ID', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                    </td>
-                    <td className="px-6 py-4 text-right space-x-2">
-                      <button
-                        type="button"
-                        onClick={() => openEditModal(item)}
-                        className="p-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                        title="Edit Pengumuman"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDeleteTarget(item)}
-                        className="p-1.5 rounded-lg text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors"
-                        title="Hapus Pengumuman"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {announcements.map((item) => {
+                  const isSelected = selectedIds.includes(item.id);
+                  return (
+                    <tr
+                      key={item.id}
+                      className={`hover:bg-slate-50/70 transition-colors ${
+                        isSelected ? 'bg-blue-50/40' : ''
+                      }`}
+                    >
+                      <td className="w-12 px-4 py-4 text-center">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectOne(item.id)}
+                          className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer"
+                        />
+                      </td>
+                      <td className="px-6 py-4 max-w-md">
+                        <p className="font-bold text-slate-900">{item.title}</p>
+                        <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                          {item.content}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <button
+                          type="button"
+                          onClick={() => toggleActive(item)}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
+                            item.is_active
+                              ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+                              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                          }`}
+                        >
+                          {item.is_active ? (
+                            <>
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                              <span>Aktif</span>
+                            </>
+                          ) : (
+                            <>
+                              <XCircle className="w-3.5 h-3.5 text-slate-400" />
+                              <span>Non-aktif</span>
+                            </>
+                          )}
+                        </button>
+                      </td>
+                      <td className="px-6 py-4 text-xs text-slate-500">
+                        {new Date(item.created_at).toLocaleDateString('id-ID', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                        })}
+                      </td>
+                      <td className="px-6 py-4 text-right space-x-2">
+                        <button
+                          type="button"
+                          onClick={() => openEditModal(item)}
+                          className="p-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                          title="Edit Pengumuman"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeleteTarget(item)}
+                          className="p-1.5 rounded-lg text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors"
+                          title="Hapus Pengumuman"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -338,6 +435,17 @@ export default function AdminPengumumanPage() {
         isLoading={isDeleting}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
+      />
+
+      {/* Dialog Konfirmasi Hapus Masal */}
+      <ConfirmDialog
+        isOpen={isBulkConfirmOpen}
+        title="Hapus Data Terpilih?"
+        message={`Apakah Anda yakin ingin menghapus ${selectedIds.length} pengumuman yang dipilih? Tindakan ini tidak dapat dibatalkan.`}
+        confirmLabel={`Ya, Hapus ${selectedIds.length} Pengumuman`}
+        isLoading={isBulkDeleting}
+        onConfirm={handleBulkDelete}
+        onCancel={() => setIsBulkConfirmOpen(false)}
       />
     </div>
   );

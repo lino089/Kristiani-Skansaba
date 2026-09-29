@@ -11,7 +11,7 @@ export interface OrganizationStructureItem {
   id: string;
   role: string;
   name: string;
-  level: 'pembina' | 'inti' | 'divisi';
+  level: 'pembina' | 'inti' | 'divisi' | 'guru' | 'siswa';
   division?: string;
   photo_url?: string;
 }

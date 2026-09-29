@@ -26,6 +26,11 @@ export default function AdminGaleriPage() {
   const [deleteTarget, setDeleteTarget] = useState<GalleryItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Batch selection states
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+  const [isBulkConfirmOpen, setIsBulkConfirmOpen] = useState(false);
+
   useEffect(() => {
     let ignore = false;
     async function loadGallery() {
@@ -33,7 +38,8 @@ export default function AdminGaleriPage() {
         const res = await fetch('/api/admin/gallery');
         const data = await res.json();
         if (!ignore) {
-          setGallery(data);
+          setGallery(Array.isArray(data) ? data : []);
+          setSelectedIds([]);
         }
       } catch (e) {
         console.error(e);
@@ -120,6 +126,43 @@ export default function AdminGaleriPage() {
     }
   };
 
+  const isAllSelected = gallery.length > 0 && selectedIds.length === gallery.length;
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(gallery.map((item) => item.id));
+    }
+  };
+
+  const toggleSelectOne = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    setIsBulkDeleting(true);
+    try {
+      const res = await fetch('/api/admin/gallery', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds }),
+      });
+      if (res.ok) {
+        setSelectedIds([]);
+        setIsBulkConfirmOpen(false);
+        setRefreshKey((k) => k + 1);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -134,15 +177,64 @@ export default function AdminGaleriPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={openCreateModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-xs shadow-blue-600/30 transition-all cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Unggah Foto Baru</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={openCreateModal}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-xs shadow-blue-600/30 transition-all cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Unggah Foto Baru</span>
+          </button>
+        </div>
       </div>
+
+      {/* Select All Bar (when items exist) */}
+      {!isLoading && gallery.length > 0 && (
+        <div className="flex items-center justify-between bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-200">
+          <label className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={isAllSelected}
+              onChange={toggleSelectAll}
+              className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer"
+            />
+            <span>Pilih Semua Foto ({gallery.length} foto)</span>
+          </label>
+          <span className="text-xs text-slate-400 font-medium">
+            {selectedIds.length} terpilih
+          </span>
+        </div>
+      )}
+
+      {/* Bulk Action Toolbar */}
+      {selectedIds.length > 0 && (
+        <div className="flex items-center justify-between bg-blue-50/90 border border-blue-200/80 px-4 py-3 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold">
+              {selectedIds.length}
+            </span>
+            <span className="text-sm font-semibold text-blue-900">
+              {selectedIds.length} foto dipilih
+            </span>
+            <button
+              type="button"
+              onClick={() => setSelectedIds([])}
+              className="text-xs text-blue-700 hover:text-blue-900 underline font-medium ml-2 cursor-pointer"
+            >
+              Batalkan Pilihan
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsBulkConfirmOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-500 shadow-xs cursor-pointer transition-colors"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Hapus {selectedIds.length} Foto Terpilih</span>
+          </button>
+        </div>
+      )}
 
       {/* Grid Aset Galeri */}
       {isLoading ? (
@@ -157,59 +249,74 @@ export default function AdminGaleriPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {gallery.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
-            >
-              <div className="relative overflow-hidden bg-slate-100">
-                <OptimizedImage
-                  src={item.image_url}
-                  alt={item.title}
-                  aspectRatio="4/3"
-                  className="group-hover:scale-105 transition-transform duration-500"
-                />
-                <span className="absolute top-2.5 right-2.5 text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-900/80 text-white backdrop-blur-xs">
-                  {item.year}
-                </span>
-              </div>
-
-              <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                <div>
-                  <span className="text-[11px] font-semibold text-blue-600 block">
-                    {item.event_name}
+          {gallery.map((item) => {
+            const isSelected = selectedIds.includes(item.id);
+            return (
+              <div
+                key={item.id}
+                className={`bg-white rounded-2xl overflow-hidden border transition-all flex flex-col justify-between group ${
+                  isSelected
+                    ? 'border-blue-500 ring-2 ring-blue-500/30 shadow-md'
+                    : 'border-slate-200 shadow-xs hover:shadow-md'
+                }`}
+              >
+                <div className="relative overflow-hidden bg-slate-100">
+                  <div className="absolute top-2.5 left-2.5 z-10">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleSelectOne(item.id)}
+                      className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer bg-white shadow-xs"
+                    />
+                  </div>
+                  <OptimizedImage
+                    src={item.image_url}
+                    alt={item.title}
+                    aspectRatio="4/3"
+                    className="group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <span className="absolute top-2.5 right-2.5 text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-900/80 text-white backdrop-blur-xs">
+                    {item.year}
                   </span>
-                  <h3 className="font-bold text-sm text-slate-900 mt-0.5 line-clamp-1">
-                    {item.title}
-                  </h3>
-                  {item.description && (
-                    <p className="text-xs text-slate-500 line-clamp-2 mt-1">
-                      {item.description}
-                    </p>
-                  )}
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => openEditModal(item)}
-                    className="p-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                    title="Edit Data Foto"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDeleteTarget(item)}
-                    className="p-1.5 rounded-lg text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors"
-                    title="Hapus Foto"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                  <div>
+                    <span className="text-[11px] font-semibold text-blue-600 block">
+                      {item.event_name}
+                    </span>
+                    <h3 className="font-bold text-sm text-slate-900 mt-0.5 line-clamp-1">
+                      {item.title}
+                    </h3>
+                    {item.description && (
+                      <p className="text-xs text-slate-500 line-clamp-2 mt-1">
+                        {item.description}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => openEditModal(item)}
+                      className="p-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                      title="Edit Data Foto"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeleteTarget(item)}
+                      className="p-1.5 rounded-lg text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors"
+                      title="Hapus Foto"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -324,6 +431,17 @@ export default function AdminGaleriPage() {
         isLoading={isDeleting}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
+      />
+
+      {/* Dialog Konfirmasi Hapus Masal */}
+      <ConfirmDialog
+        isOpen={isBulkConfirmOpen}
+        title="Hapus Data Terpilih?"
+        message={`Apakah Anda yakin ingin menghapus ${selectedIds.length} foto galeri yang dipilih? Tindakan ini tidak dapat dibatalkan.`}
+        confirmLabel={`Ya, Hapus ${selectedIds.length} Foto`}
+        isLoading={isBulkDeleting}
+        onConfirm={handleBulkDelete}
+        onCancel={() => setIsBulkConfirmOpen(false)}
       />
     </div>
   );

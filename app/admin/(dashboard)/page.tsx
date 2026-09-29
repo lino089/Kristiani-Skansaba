@@ -200,26 +200,32 @@ export default async function AdminDashboardPage() {
             </div>
 
             <div className="mt-4 space-y-3">
-              {events.slice(0, 3).map((event) => (
-                <div
-                  key={event.id}
-                  className="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors text-xs"
-                >
-                  <div className="truncate max-w-[240px] sm:max-w-xs">
-                    <p className="font-bold text-slate-800 truncate">{event.title}</p>
-                    <p className="text-slate-400 mt-0.5">{event.location}</p>
-                  </div>
-                  <span
-                    className={`font-semibold px-2 py-0.5 rounded-md text-[11px] ${
-                      event.status === 'upcoming'
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-slate-200 text-slate-700'
-                    }`}
-                  >
-                    {event.status === 'upcoming' ? 'Mendatang' : 'Selesai'}
-                  </span>
+              {events.length === 0 ? (
+                <div className="p-6 text-center rounded-xl bg-slate-50 text-slate-400 text-xs">
+                  Belum ada agenda kegiatan yang terdaftar.
                 </div>
-              ))}
+              ) : (
+                events.slice(0, 3).map((event) => (
+                  <div
+                    key={event.id}
+                    className="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors text-xs"
+                  >
+                    <div className="truncate max-w-[240px] sm:max-w-xs">
+                      <p className="font-bold text-slate-800 truncate">{event.title}</p>
+                      <p className="text-slate-400 mt-0.5">{event.location}</p>
+                    </div>
+                    <span
+                      className={`font-semibold px-2 py-0.5 rounded-md text-[11px] ${
+                        event.status === 'upcoming'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-slate-200 text-slate-700'
+                      }`}
+                    >
+                      {event.status === 'upcoming' ? 'Mendatang' : 'Selesai'}
+                    </span>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 

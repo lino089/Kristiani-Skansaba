@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
-const DEFAULT_ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@skansaba.sch.id';
-const DEFAULT_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'skansaba2026kristen';
+// Honeypot Credentials (Prank decoy displayed on the login page)
+export const HONEYPOT_EMAIL = 'admin@skansaba.sch.id';
+export const HONEYPOT_PASSWORD = 'skansaba2026kristen';
 
 export async function POST(
   request: NextRequest,
@@ -22,26 +23,47 @@ export async function POST(
         );
       }
 
+      const inputEmail = String(email).trim().toLowerCase();
+      const inputPassword = String(password);
+
+      // 1. Honeypot check (Prank Trap)
+      if (
+        inputEmail === HONEYPOT_EMAIL.toLowerCase() &&
+        inputPassword === HONEYPOT_PASSWORD
+      ) {
+        return NextResponse.json(
+          {
+            success: false,
+            isPrank: true,
+            message: 'Kena prank! Ini adalah kredensial jebakan (honeypot).',
+          },
+          { status: 400 }
+        );
+      }
+
       let isAuthenticated = false;
 
-      // 1. If Supabase Auth is configured, try Supabase sign in
-      if (isSupabaseConfigured() && supabase) {
+      // 2. Check against real admin credentials configured in environment variables (.env.local)
+      const configuredEmail = process.env.ADMIN_EMAIL;
+      const configuredPassword = process.env.ADMIN_PASSWORD;
+
+      if (
+        configuredEmail &&
+        configuredPassword &&
+        inputEmail === configuredEmail.trim().toLowerCase() &&
+        inputPassword === configuredPassword
+      ) {
+        isAuthenticated = true;
+      }
+
+      // 3. If Supabase Auth is configured and not yet authenticated, try Supabase sign in
+      if (!isAuthenticated && isSupabaseConfigured() && supabase) {
         const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
+          email: inputEmail,
+          password: inputPassword,
         });
 
         if (!error && data.session) {
-          isAuthenticated = true;
-        }
-      }
-
-      // 2. Fallback check against configured admin credentials
-      if (!isAuthenticated) {
-        if (
-          email.toLowerCase() === DEFAULT_ADMIN_EMAIL.toLowerCase() &&
-          password === DEFAULT_ADMIN_PASSWORD
-        ) {
           isAuthenticated = true;
         }
       }

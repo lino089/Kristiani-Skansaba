@@ -9,7 +9,8 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import OptimizedImage from '@/components/ui/OptimizedImage';
-import { getProfile } from '@/lib/data-store';
+import { getProfile, getMembers } from '@/lib/data-store';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Profil Persekutuan & Nilai Bersama',
@@ -18,11 +19,14 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilPage() {
-  const profile = await getProfile();
+  const [profile, members] = await Promise.all([getProfile(), getMembers()]);
 
-  const pembina = profile.structure.filter((s) => s.level === 'pembina');
-  const inti = profile.structure.filter((s) => s.level === 'inti');
-  const divisi = profile.structure.filter((s) => s.level === 'divisi');
+  const guruList = (profile.structure || []).filter(
+    (s) => s.level === 'pembina' || s.level === 'guru'
+  );
+  // Siswa diambil langsung dari data Siswa & Alumni
+  const activeStudents = members.filter((m) => !m.is_alumni);
+  const displayStudents = activeStudents.length > 0 ? activeStudents : members;
 
   return (
     <div className="py-12 lg:py-16 space-y-16 lg:space-y-24">
@@ -59,114 +63,128 @@ export default async function ProfilPage() {
           </div>
 
           <div className="lg:col-span-6">
-            <div className="relative rounded-3xl overflow-hidden shadow-md border border-[#E2E8F0] group">
+            <div className="relative rounded-2xl overflow-hidden shadow-xs border border-[#E2E8F0]">
               <OptimizedImage
-                src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80"
-                alt="Kebersamaan Persekutuan Siswa Kristiani"
+                src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=1200&auto=format&fit=crop&q=80"
+                alt="Kebersamaan Siswa Kristiani Skansaba"
                 aspectRatio="16/9"
-                className="group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-auto object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/80 via-[#0F172A]/20 to-transparent flex items-end p-6 text-white">
-                <p className="text-sm font-medium italic">
-                  &ldquo;Sehati sepikir, dalam satu kasih, satu jiwa, satu tujuan.&rdquo; (Filipi 2:2)
-                </p>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Visi & Misi */}
-      <section className="bg-[#EAEFEA]/50 py-16 border-y border-[#DCE4DD]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-            {/* Visi */}
-            <div className="lg:col-span-5 bg-gradient-to-br from-[#025F98] via-[#027AB6] to-[#1B7C4F] text-white rounded-3xl p-8 sm:p-10 shadow-md flex flex-col justify-between">
+      {/* Nilai & Semangat Bersama (Substitusi Visi Misi Kaku) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#15803D] mb-2">
+            <Target className="w-4 h-4" />
+            <span>Nilai &amp; Semangat Bersama</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight">
+            Semangat Persaudaraan &amp; Karakter Kristiani
+          </h2>
+          <p className="text-sm text-[#64748B] mt-1">
+            Prinsip kasih persaudaraan dan keteladanan yang kami hidupi bersama di lingkungan sekolah.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Nilai Dasar / Semangat Kasih */}
+          <div className="lg:col-span-5 bg-white p-8 rounded-3xl border border-[#E2E8F0] shadow-xs flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#DCFCE7] flex items-center justify-center text-[#15803D]">
+                <Compass className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-[#0F172A]">
+                Semangat Kasih &amp; Persaudaraan
+              </h3>
+              <p className="text-sm text-[#475569] leading-relaxed">
+                {profile.vision}
+              </p>
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-[#E2E8F0] flex items-center gap-3 text-xs text-[#64748B]">
+              <Shield className="w-4 h-4 text-[#15803D]" />
+              <span>Mencerminkan karakter Kristus dalam perkataan dan perbuatan.</span>
+            </div>
+          </div>
+
+          {/* Wujud Nyata / Praktik Bersama */}
+          <div className="lg:col-span-7 bg-white p-8 rounded-3xl border border-[#E2E8F0] shadow-xs space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#E0F2FE] flex items-center justify-center text-[#026AA2]">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center text-white mb-6 backdrop-blur-xs">
-                  <Target className="w-6 h-6 text-[#BAE6FD]" />
-                </div>
-                <span className="text-xs font-bold uppercase tracking-wider text-[#BAE6FD]">
-                  Nilai &amp; Semangat Bersama
-                </span>
-                <h3 className="text-2xl font-extrabold text-white mt-2 leading-snug">
-                  Semangat Kasih &amp; Persaudaraan
+                <h3 className="text-lg font-bold text-[#0F172A]">
+                  Wujud Nyata Semangat &amp; Pelayanan
                 </h3>
-                <p className="text-white/90 text-base sm:text-lg leading-relaxed mt-6 italic font-light">
-                  &ldquo;{profile.vision}&rdquo;
+                <p className="text-xs text-[#64748B]">
+                  Langkah nyata saling mendukung dan menjaga kebersamaan
                 </p>
               </div>
-
-              <div className="mt-8 pt-6 border-t border-white/20 flex items-center gap-2 text-xs text-[#BAE6FD]">
-                <Shield className="w-4 h-4" />
-                <span>Dasar Persekutuan &amp; Saling Mendoakan</span>
-              </div>
             </div>
 
-            {/* Misi */}
-            <div className="lg:col-span-7 bg-white rounded-3xl p-8 sm:p-10 border border-[#E2E8F0] shadow-xs flex flex-col justify-between">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#E0F2FE] flex items-center justify-center text-[#0284C7] mb-6 shadow-2xs">
-                  <Compass className="w-6 h-6" />
-                </div>
-                <span className="text-xs font-bold uppercase tracking-wider text-[#026AA2]">
-                  Wujud Nyata Pelayanan
-                </span>
-                <h3 className="text-2xl font-extrabold text-[#0F172A] mt-2">
-                  Langkah Saling Mendukung
-                </h3>
-                <ul className="mt-6 space-y-4">
-                  {profile.mission.map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-3.5">
-                      <div className="w-6 h-6 rounded-full bg-[#DCFCE7] text-[#15803D] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
-                        {idx + 1}
-                      </div>
-                      <span className="text-[#475569] text-sm sm:text-base leading-relaxed">
-                        {item}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+            {profile.mission.length === 0 ? (
+              <div className="p-6 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] text-center text-xs text-[#64748B]">
+                Belum ada butir wujud nyata pelayanan yang dicantumkan.
               </div>
-
-              <div className="mt-8 pt-6 border-t border-[#F1F5F9] flex items-center gap-2 text-xs text-[#64748B]">
-                <CheckCircle2 className="w-4 h-4 text-[#15803D]" />
-                <span>Terus dihidupi bersama dalam kehidupan sehari-hari di sekolah</span>
+            ) : (
+              <div className="grid grid-cols-1 gap-3.5">
+                {profile.mission.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0]/80 hover:bg-[#F0FDF4] hover:border-[#BBF7D0] transition-colors"
+                  >
+                    <span className="w-6 h-6 rounded-full bg-[#DCFCE7] text-[#15803D] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                      {idx + 1}
+                    </span>
+                    <p className="text-xs sm:text-sm text-[#334155] leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Guru Pembina & Koordinator Kegiatan */}
+      {/* Daftar Guru & Siswa */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#026AA2] mb-2">
             <Users className="w-4 h-4" />
-            <span>Pembina &amp; Koordinator Kegiatan</span>
+            <span>Guru &amp; Siswa</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight">
-            Guru Pembina &amp; Koordinator Siswa
+            Daftar Guru &amp; Siswa
           </h2>
           <p className="text-sm text-[#64748B] mt-1">
-            Bapak/Ibu Guru Pembina Agama dan siswa narahubung/PIC pelayanan kegiatan di SMK Negeri 1 Bantul.
+            Bapak/Ibu Guru Pembina Agama dan siswa-siswi persekutuan Kristiani di SMK Negeri 1 Bantul.
           </p>
         </div>
 
         <div className="space-y-12">
-          {/* Level 1: Dewan Pembina */}
-          {pembina.length > 0 && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-center gap-3">
-                <span className="h-px bg-[#E2E8F0] flex-1 max-w-xs" />
-                <span className="text-xs font-bold uppercase tracking-widest text-[#64748B]">
-                  Guru Pembina Agama Kristen &amp; Katolik
-                </span>
-                <span className="h-px bg-[#E2E8F0] flex-1 max-w-xs" />
-              </div>
+          {/* Bagian 1: Daftar Guru */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-center gap-3">
+              <span className="h-px bg-[#E2E8F0] flex-1 max-w-xs" />
+              <span className="text-xs font-bold uppercase tracking-widest text-[#026AA2]">
+                Daftar Guru
+              </span>
+              <span className="h-px bg-[#E2E8F0] flex-1 max-w-xs" />
+            </div>
 
-              <div className="flex justify-center">
-                {pembina.map((item) => (
+            {guruList.length === 0 ? (
+              <div className="bg-white p-8 text-center rounded-3xl border border-[#E2E8F0] shadow-xs max-w-md mx-auto text-[#64748B]">
+                <p className="text-xs">Belum ada data guru pembina yang terdaftar.</p>
+              </div>
+            ) : (
+              <div className="flex flex-wrap justify-center gap-6">
+                {guruList.map((item) => (
                   <div
                     key={item.id}
                     className="bg-white p-6 rounded-3xl border border-[#E2E8F0] shadow-xs max-w-sm w-full text-center group hover:border-[#0284C7]/40 hover:shadow-md transition-all"
@@ -181,84 +199,69 @@ export default async function ProfilPage() {
                       />
                     </div>
                     <h3 className="font-bold text-lg text-[#0F172A]">{item.name}</h3>
-                    <p className="text-xs font-bold text-[#026AA2] uppercase tracking-wider mt-0.5">
-                      {item.role}
+                    <p className="text-xs font-bold text-[#026AA2] uppercase tracking-wider mt-1">
+                      {item.role || 'Guru Pembina Agama'}
                     </p>
                   </div>
                 ))}
               </div>
+            )}
+          </div>
+
+          {/* Bagian 2: Daftar Siswa */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-center gap-3">
+              <span className="h-px bg-[#E2E8F0] flex-1 max-w-xs" />
+              <span className="text-xs font-bold uppercase tracking-widest text-[#15803D]">
+                Daftar Siswa
+              </span>
+              <span className="h-px bg-[#E2E8F0] flex-1 max-w-xs" />
             </div>
-          )}
 
-          {/* Level 2: Pengurus Inti */}
-          {inti.length > 0 && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-center gap-3">
-                <span className="h-px bg-[#E2E8F0] flex-1 max-w-xs" />
-                <span className="text-xs font-bold uppercase tracking-widest text-[#64748B]">
-                  Koordinator Siswa &amp; Narahubung Kegiatan
-                </span>
-                <span className="h-px bg-[#E2E8F0] flex-1 max-w-xs" />
+            {displayStudents.length === 0 ? (
+              <div className="bg-white p-8 text-center rounded-3xl border border-[#E2E8F0] shadow-xs max-w-md mx-auto text-[#64748B]">
+                <p className="text-xs">Belum ada data siswa terdaftar di direktori.</p>
+                <Link
+                  href="/anggota"
+                  className="inline-block mt-3 text-xs font-semibold text-[#026AA2] hover:underline"
+                >
+                  Lihat Direktori Siswa &amp; Alumni &rarr;
+                </Link>
               </div>
-
+            ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {inti.map((item) => (
+                {displayStudents.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-white p-6 rounded-3xl border border-[#E2E8F0] shadow-xs text-center group hover:border-[#0284C7]/40 hover:shadow-md transition-all"
+                    className="bg-white p-6 rounded-3xl border border-[#E2E8F0] shadow-xs text-center group hover:border-[#0284C7]/40 hover:shadow-md transition-all flex flex-col items-center justify-between"
                   >
-                    <div className="w-20 h-20 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-[#DCFCE7] shadow-xs">
-                      <OptimizedImage
-                        src={item.photo_url}
-                        alt={item.name}
-                        aspectRatio="1/1"
-                        isAvatar={true}
-                        className="group-hover:scale-105 transition-transform duration-300"
-                      />
+                    <div className="w-full flex flex-col items-center">
+                      <div className="w-20 h-20 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-[#DCFCE7] shadow-xs">
+                        <OptimizedImage
+                          src={item.photo_url}
+                          alt={item.name}
+                          aspectRatio="1/1"
+                          isAvatar={true}
+                          className="group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                      <h3 className="font-bold text-base text-[#0F172A]">{item.name}</h3>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        {item.is_alumni
+                          ? `Alumni (Angkatan ${item.class_year})`
+                          : `Siswa Aktif (Angkatan ${item.class_year})`}
+                      </p>
                     </div>
-                    <h3 className="font-bold text-base text-[#0F172A]">{item.name}</h3>
-                    <span className="inline-block px-2.5 py-0.5 mt-1.5 rounded-full text-xs font-semibold bg-[#DCFCE7] text-[#15803D] border border-[#BBF7D0]">
-                      {item.role}
-                    </span>
+                    {item.role && (
+                      <span className="inline-block px-2.5 py-0.5 mt-2 rounded-full text-xs font-semibold bg-[#DCFCE7] text-[#15803D] border border-[#BBF7D0]">
+                        {item.role}
+                      </span>
+                    )}
                   </div>
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* Level 3: Koordinator Divisi */}
-          {divisi.length > 0 && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-center gap-3">
-                <span className="h-px bg-[#E2E8F0] flex-1 max-w-xs" />
-                <span className="text-xs font-bold uppercase tracking-widest text-[#64748B]">
-                  Tim Pendukung / PIC Kegiatan (Ibadah, Natal, Paskah, Musik)
-                </span>
-                <span className="h-px bg-[#E2E8F0] flex-1 max-w-xs" />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {divisi.map((item) => (
-                  <div
-                    key={item.id}
-                    className="bg-white p-5 rounded-3xl border border-[#E2E8F0] shadow-xs text-center group hover:border-[#0284C7]/40 hover:shadow-md transition-all"
-                  >
-                    <div className="w-16 h-16 mx-auto rounded-full overflow-hidden mb-3 ring-2 ring-[#E2E8F0] shadow-xs">
-                      <OptimizedImage
-                        src={item.photo_url}
-                        alt={item.name}
-                        aspectRatio="1/1"
-                        isAvatar={true}
-                        className="group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                    <h3 className="font-bold text-sm text-[#0F172A]">{item.name}</h3>
-                    <p className="text-xs text-[#64748B] mt-0.5">{item.division || item.role}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </section>
     </div>

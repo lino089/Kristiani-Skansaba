@@ -33,6 +33,11 @@ export default function AdminKegiatanPage() {
   const [deleteTarget, setDeleteTarget] = useState<EventItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Batch selection states
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+  const [isBulkConfirmOpen, setIsBulkConfirmOpen] = useState(false);
+
   useEffect(() => {
     let ignore = false;
     async function loadEvents() {
@@ -40,7 +45,8 @@ export default function AdminKegiatanPage() {
         const res = await fetch('/api/admin/events');
         const data = await res.json();
         if (!ignore) {
-          setEvents(data);
+          setEvents(Array.isArray(data) ? data : []);
+          setSelectedIds([]);
         }
       } catch (e) {
         console.error(e);
@@ -160,6 +166,43 @@ export default function AdminKegiatanPage() {
     }
   };
 
+  const isAllSelected = events.length > 0 && selectedIds.length === events.length;
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(events.map((e) => e.id));
+    }
+  };
+
+  const toggleSelectOne = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    setIsBulkDeleting(true);
+    try {
+      const res = await fetch('/api/admin/events', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds }),
+      });
+      if (res.ok) {
+        setSelectedIds([]);
+        setIsBulkConfirmOpen(false);
+        setRefreshKey((k) => k + 1);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -184,6 +227,35 @@ export default function AdminKegiatanPage() {
         </button>
       </div>
 
+      {/* Bulk Action Toolbar */}
+      {selectedIds.length > 0 && (
+        <div className="flex items-center justify-between bg-blue-50/90 border border-blue-200/80 px-4 py-3 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold">
+              {selectedIds.length}
+            </span>
+            <span className="text-sm font-semibold text-blue-900">
+              {selectedIds.length} kegiatan dipilih
+            </span>
+            <button
+              type="button"
+              onClick={() => setSelectedIds([])}
+              className="text-xs text-blue-700 hover:text-blue-900 underline font-medium ml-2 cursor-pointer"
+            >
+              Batalkan Pilihan
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsBulkConfirmOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-500 shadow-xs cursor-pointer transition-colors"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Hapus {selectedIds.length} Kegiatan Terpilih</span>
+          </button>
+        </div>
+      )}
+
       {/* Tabel Kegiatan */}
       {isLoading ? (
         <div className="py-20 text-center">
@@ -201,6 +273,15 @@ export default function AdminKegiatanPage() {
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 text-slate-600 text-xs uppercase font-bold tracking-wider border-b border-slate-200">
                 <tr>
+                  <th className="w-12 px-4 py-4 text-center">
+                    <input
+                      type="checkbox"
+                      checked={isAllSelected}
+                      onChange={toggleSelectAll}
+                      className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer"
+                      title="Pilih Semua"
+                    />
+                  </th>
                   <th className="px-6 py-4">Cover &amp; Judul Acara</th>
                   <th className="px-6 py-4">Waktu &amp; Lokasi</th>
                   <th className="px-6 py-4">Status</th>
@@ -208,9 +289,24 @@ export default function AdminKegiatanPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {events.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="px-6 py-4">
+                {events.map((item) => {
+                  const isSelected = selectedIds.includes(item.id);
+                  return (
+                    <tr
+                      key={item.id}
+                      className={`hover:bg-slate-50/70 transition-colors ${
+                        isSelected ? 'bg-blue-50/40' : ''
+                      }`}
+                    >
+                      <td className="w-12 px-4 py-4 text-center">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectOne(item.id)}
+                          className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer"
+                        />
+                      </td>
+                      <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-16 h-10 rounded-lg overflow-hidden bg-slate-100 border border-slate-200 flex-shrink-0">
                           <OptimizedImage
@@ -273,7 +369,8 @@ export default function AdminKegiatanPage() {
                       </button>
                     </td>
                   </tr>
-                ))}
+                );
+              })}
               </tbody>
             </table>
           </div>
@@ -488,6 +585,17 @@ export default function AdminKegiatanPage() {
         isLoading={isDeleting}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
+      />
+
+      {/* Dialog Konfirmasi Hapus Masal */}
+      <ConfirmDialog
+        isOpen={isBulkConfirmOpen}
+        title="Hapus Data Terpilih?"
+        message={`Apakah Anda yakin ingin menghapus ${selectedIds.length} agenda kegiatan yang dipilih? Seluruh foto dan galeri terkait juga akan terhapus.`}
+        confirmLabel={`Ya, Hapus ${selectedIds.length} Kegiatan`}
+        isLoading={isBulkDeleting}
+        onConfirm={handleBulkDelete}
+        onCancel={() => setIsBulkConfirmOpen(false)}
       />
     </div>
   );

@@ -27,6 +27,11 @@ export default function AdminPrestasiPage() {
   const [deleteTarget, setDeleteTarget] = useState<Achievement | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Batch selection states
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+  const [isBulkConfirmOpen, setIsBulkConfirmOpen] = useState(false);
+
   useEffect(() => {
     let ignore = false;
     async function loadAchievements() {
@@ -34,7 +39,8 @@ export default function AdminPrestasiPage() {
         const res = await fetch('/api/admin/achievements');
         const data = await res.json();
         if (!ignore) {
-          setAchievements(data);
+          setAchievements(Array.isArray(data) ? data : []);
+          setSelectedIds([]);
         }
       } catch (e) {
         console.error(e);
@@ -119,6 +125,43 @@ export default function AdminPrestasiPage() {
     }
   };
 
+  const isAllSelected = achievements.length > 0 && selectedIds.length === achievements.length;
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(achievements.map((item) => item.id));
+    }
+  };
+
+  const toggleSelectOne = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    setIsBulkDeleting(true);
+    try {
+      const res = await fetch('/api/admin/achievements', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds }),
+      });
+      if (res.ok) {
+        setSelectedIds([]);
+        setIsBulkConfirmOpen(false);
+        setRefreshKey((k) => k + 1);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -143,6 +186,35 @@ export default function AdminPrestasiPage() {
         </button>
       </div>
 
+      {/* Bulk Action Toolbar */}
+      {selectedIds.length > 0 && (
+        <div className="flex items-center justify-between bg-blue-50/90 border border-blue-200/80 px-4 py-3 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold">
+              {selectedIds.length}
+            </span>
+            <span className="text-sm font-semibold text-blue-900">
+              {selectedIds.length} prestasi dipilih
+            </span>
+            <button
+              type="button"
+              onClick={() => setSelectedIds([])}
+              className="text-xs text-blue-700 hover:text-blue-900 underline font-medium ml-2 cursor-pointer"
+            >
+              Batalkan Pilihan
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsBulkConfirmOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-500 shadow-xs cursor-pointer transition-colors"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Hapus {selectedIds.length} Prestasi Terpilih</span>
+          </button>
+        </div>
+      )}
+
       {/* Tabel Data Prestasi */}
       {isLoading ? (
         <div className="py-20 text-center">
@@ -160,6 +232,15 @@ export default function AdminPrestasiPage() {
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 text-slate-600 text-xs uppercase font-bold tracking-wider border-b border-slate-200">
                 <tr>
+                  <th className="w-12 px-4 py-4 text-center">
+                    <input
+                      type="checkbox"
+                      checked={isAllSelected}
+                      onChange={toggleSelectAll}
+                      className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer"
+                      title="Pilih Semua"
+                    />
+                  </th>
                   <th className="px-6 py-4">Dokumentasi Piagam</th>
                   <th className="px-6 py-4">Nama Kejuaraan &amp; Penerima</th>
                   <th className="px-6 py-4">Tingkat &amp; Tahun</th>
@@ -167,51 +248,67 @@ export default function AdminPrestasiPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {achievements.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="w-20 h-12 rounded-lg overflow-hidden bg-slate-100 border border-slate-200">
-                        <OptimizedImage
-                          src={item.certificate_url}
-                          alt={item.title}
-                          aspectRatio="16/9"
+                {achievements.map((item) => {
+                  const isSelected = selectedIds.includes(item.id);
+                  return (
+                    <tr
+                      key={item.id}
+                      className={`hover:bg-slate-50/70 transition-colors ${
+                        isSelected ? 'bg-blue-50/40' : ''
+                      }`}
+                    >
+                      <td className="w-12 px-4 py-4 text-center">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectOne(item.id)}
+                          className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer"
                         />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 max-w-sm">
-                      <p className="font-bold text-slate-900">{item.title}</p>
-                      <p className="text-xs text-blue-600 font-semibold mt-0.5">
-                        Penerima: {item.recipient_name}
-                      </p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="inline-block text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
-                        {item.level}
-                      </span>
-                      <p className="text-xs text-slate-500 mt-1 font-semibold">
-                        Tahun {item.year}
-                      </p>
-                    </td>
-                    <td className="px-6 py-4 text-right space-x-2">
-                      <button
-                        type="button"
-                        onClick={() => openEditModal(item)}
-                        className="p-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                        title="Edit Prestasi"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDeleteTarget(item)}
-                        className="p-1.5 rounded-lg text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors"
-                        title="Hapus Prestasi"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="w-20 h-12 rounded-lg overflow-hidden bg-slate-100 border border-slate-200">
+                          <OptimizedImage
+                            src={item.certificate_url}
+                            alt={item.title}
+                            aspectRatio="16/9"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 max-w-sm">
+                        <p className="font-bold text-slate-900">{item.title}</p>
+                        <p className="text-xs text-blue-600 font-semibold mt-0.5">
+                          Penerima: {item.recipient_name}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="inline-block text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                          {item.level}
+                        </span>
+                        <p className="text-xs text-slate-500 mt-1 font-semibold">
+                          Tahun {item.year}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4 text-right space-x-2">
+                        <button
+                          type="button"
+                          onClick={() => openEditModal(item)}
+                          className="p-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                          title="Edit Prestasi"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeleteTarget(item)}
+                          className="p-1.5 rounded-lg text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors"
+                          title="Hapus Prestasi"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -346,6 +443,17 @@ export default function AdminPrestasiPage() {
         isLoading={isDeleting}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
+      />
+
+      {/* Dialog Konfirmasi Hapus Masal */}
+      <ConfirmDialog
+        isOpen={isBulkConfirmOpen}
+        title="Hapus Data Terpilih?"
+        message={`Apakah Anda yakin ingin menghapus ${selectedIds.length} data prestasi yang dipilih? Tindakan ini tidak dapat dibatalkan.`}
+        confirmLabel={`Ya, Hapus ${selectedIds.length} Prestasi`}
+        isLoading={isBulkDeleting}
+        onConfirm={handleBulkDelete}
+        onCancel={() => setIsBulkConfirmOpen(false)}
       />
     </div>
   );
