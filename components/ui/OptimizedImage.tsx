@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import {
   getOptimizedImageUrl,
   DEFAULT_AVATAR_PLACEHOLDER,
@@ -37,7 +38,6 @@ export default function OptimizedImage({
 
   const fallback = isAvatar ? DEFAULT_AVATAR_PLACEHOLDER : DEFAULT_EVENT_PLACEHOLDER;
 
-  // Process src through wsrv.nl WebP optimizer
   const optimizedSrc = !hasError && src
     ? getOptimizedImageUrl(src, { width, height, quality: 85, fit }, isAvatar)
     : fallback;
@@ -56,23 +56,24 @@ export default function OptimizedImage({
       className={`relative overflow-hidden bg-slate-100 ${aspectClass} ${containerClassName}`}
     >
       {isLoading && (
-        <div className="absolute inset-0 animate-pulse bg-slate-200/70" />
+        <div className="absolute inset-0 animate-pulse bg-slate-200/70 z-10" />
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={optimizedSrc}
         alt={alt}
-        loading={priority ? 'eager' : 'lazy'}
-        decoding="async"
+        fill
+        priority={priority}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         onLoad={() => setIsLoading(false)}
         onError={() => {
           setHasError(true);
           setIsLoading(false);
         }}
-        className={`w-full h-full object-${fit} transition-opacity duration-300 ${
+        className={`object-${fit} transition-opacity duration-300 ${
           isLoading ? 'opacity-0' : 'opacity-100'
         } ${className}`}
       />
     </div>
   );
 }
+
