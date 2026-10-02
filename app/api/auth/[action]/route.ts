@@ -55,21 +55,6 @@ export async function POST(
         }
       }
 
-      // 3. Fallback: Check against environment variables (.env.local) if Supabase Auth not matched
-      if (!isAuthenticated) {
-        const configuredEmail = process.env.ADMIN_EMAIL;
-        const configuredPassword = process.env.ADMIN_PASSWORD;
-
-        if (
-          configuredEmail &&
-          configuredPassword &&
-          inputEmail === configuredEmail.trim().toLowerCase() &&
-          inputPassword === configuredPassword
-        ) {
-          isAuthenticated = true;
-        }
-      }
-
       if (!isAuthenticated) {
         return NextResponse.json(
           {

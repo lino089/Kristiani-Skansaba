@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { uploadToGoogleDrive } from '@/lib/gdrive';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const result = await uploadToGoogleDrive(buffer, file.name, file.type);
+    const result = await uploadToCloudinary(buffer, file.name, file.type);
 
     return NextResponse.json({
       success: true,
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Upload error:', error);
     return NextResponse.json(
-      { success: false, message: 'Gagal mengunggah berkas ke penyimpanan.' },
+      { success: false, message: 'Gagal mengunggah berkas ke Cloudinary.' },
       { status: 500 }
     );
   }

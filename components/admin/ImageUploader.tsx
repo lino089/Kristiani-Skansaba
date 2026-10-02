@@ -134,7 +134,7 @@ export default function ImageUploader({
           </div>
           <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/60 text-white text-[10px] flex items-center gap-1 backdrop-blur-xs">
             <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-            <span>Tersimpan &amp; Dioptimalkan via wsrv.nl</span>
+            <span>Tersimpan &amp; Dioptimalkan via Cloudinary</span>
           </div>
         </div>
       ) : (
@@ -174,7 +174,7 @@ export default function ImageUploader({
               </div>
               <p className="text-xs font-bold text-slate-700">
                 {isUploading
-                  ? 'Mengunggah gambar ke Google Drive...'
+                  ? 'Mengunggah gambar ke Cloudinary...'
                   : 'Klik atau Tarik File Gambar ke Sini'}
               </p>
               <p className="text-[11px] text-slate-400 mt-1">

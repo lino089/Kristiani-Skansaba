@@ -55,6 +55,24 @@ export function getOptimizedImageUrl(
 
   let targetUrl = url;
 
+  // Handle Cloudinary links natively
+  if (url.includes('res.cloudinary.com')) {
+    // Sisipkan transformasi f_auto,q_auto,w_{width},c_{fit}
+    const transforms = ['f_auto', 'q_auto'];
+    if (width) transforms.push(`w_${width}`);
+    if (height) transforms.push(`h_${height}`);
+    if (fit === 'cover') transforms.push('c_fill');
+    else if (fit === 'contain') transforms.push('c_fit');
+    
+    const transformStr = transforms.join(',');
+    // Pisahkan URL pada bagian /upload/
+    const parts = url.split('/upload/');
+    if (parts.length === 2) {
+      return `${parts[0]}/upload/${transformStr}/${parts[1]}`;
+    }
+    return url;
+  }
+
   // Handle Google Drive links
   if (url.includes('drive.google.com') || url.includes('docs.google.com')) {
     const driveId = extractGoogleDriveId(url);
