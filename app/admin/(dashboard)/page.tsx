@@ -26,7 +26,7 @@ export default async function AdminDashboardPage() {
 
   const STAT_CARDS = [
     {
-      label: 'Direktori Siswa & Alumni',
+      label: 'Direktori Siswa',
       value: metrics.total_members,
       desc: 'Tercatat dalam buku kenangan',
       href: '/admin/anggota',

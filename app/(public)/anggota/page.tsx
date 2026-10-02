@@ -4,7 +4,7 @@ import { getMembers } from '@/lib/data-store';
 import MembersDirectoryClient from '@/components/public/MembersDirectoryClient';
 
 export const metadata: Metadata = {
-  title: 'Direktori Siswa & Alumni',
+  title: 'Siswa',
   description:
     'Buku kenangan dan direktori lengkap siswa-siswi aktif serta alumni Kristiani SMK Negeri 1 Bantul per angkatan.',
 };
@@ -20,7 +20,7 @@ export default async function AnggotaPage() {
           Keluarga Besar Skansaba
         </p>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0F172A] tracking-tight">
-          Direktori Siswa &amp; Alumni
+          Siswa
         </h1>
         <p className="text-base text-[#475569] mt-3 leading-relaxed">
           Buku kenangan dan arsip siswa per angkatan untuk mempererat tali persaudaraan antara siswa aktif dan para alumni Kristiani Skansaba.

@@ -22,7 +22,7 @@ const ADMIN_MENUS = [
   { href: '/admin', label: 'Ringkasan Dasbor', icon: LayoutDashboard },
   { href: '/admin/pengumuman', label: 'Pengumuman', icon: Bell },
   { href: '/admin/profil', label: 'Profil & Pembina', icon: Building2 },
-  { href: '/admin/anggota', label: 'Direktori Siswa & Alumni', icon: Users },
+  { href: '/admin/anggota', label: 'Siswa', icon: Users },
   { href: '/admin/prestasi', label: 'Prestasi', icon: Trophy },
   { href: '/admin/kegiatan', label: 'Jadwal & Dokumentasi', icon: Calendar },
   { href: '/admin/galeri', label: 'Galeri Foto', icon: ImageIcon },

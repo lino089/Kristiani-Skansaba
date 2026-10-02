@@ -18,7 +18,7 @@ import {
 const NAV_LINKS = [
   { href: '/', label: 'Beranda', icon: Home },
   { href: '/profil', label: 'Profil', icon: Info },
-  { href: '/anggota', label: 'Siswa & Alumni', icon: Users },
+  { href: '/anggota', label: 'Siswa', icon: Users },
   { href: '/prestasi', label: 'Prestasi', icon: Trophy },
   { href: '/kegiatan', label: 'Kegiatan', icon: Calendar },
   { href: '/galeri', label: 'Galeri', icon: ImageIcon },
